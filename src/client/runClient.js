@@ -130,7 +130,7 @@ document.getElementById('svg1').addEventListener('load', function () {
 
 const table = document.getElementById('table');
 
-const ws = new WebSocket('ws://localhost:9615/');
+const ws = new WebSocket('ws://localhost:50004/');
 ws.onopen = function () {
     console.log('WebSocket Client Connected');
     const command = {
