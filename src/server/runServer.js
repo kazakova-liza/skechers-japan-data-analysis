@@ -8,7 +8,7 @@ import executeQuery from './sql/executeQuery.js';
 import execute from './execute.js';
 import cache from './cache.js';
 
-const port = 9615;
+const port = 50004;
 const baseDirectory = path.resolve();
 
 const runHttpServer = () => {
