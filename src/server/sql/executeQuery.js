@@ -1,6 +1,6 @@
 import connectToDatabase from './workWithSQL.js'
 import _ from 'lodash'
-import cache from '../cache.js'
+// import cache from '../cache.js'
 import { get } from './queries.js'
 
 
@@ -43,5 +43,27 @@ const executeQuery = async (action, tableName) => {
     // await db.close();
   }
 };
+
+export const updateField = async (tableName, keyFieldName, updatingFieldName, items) => {
+
+  const db = connectToDatabase();
+
+  const sqlQueryPattern = 'UPDATE TABLE_NAME_PLACEHOLDER SET UPD_FIELD_PLACEHOLDER = ? WHERE KEY_FIELD_PLACEHOLDER = ?;'
+
+  const query = sqlQueryPattern
+    .replace('TABLE_NAME_PLACEHOLDER', tableName)
+    .replace('UPD_FIELD_PLACEHOLDER', updatingFieldName)
+    .replace('KEY_FIELD_PLACEHOLDER', keyFieldName);
+  console.log(query);
+
+  for (const itemKey in items) {
+    const value = items[itemKey];
+    await db.query(query, [value, itemKey]);
+
+    console.log(`Updated rows with [${keyFieldName}]=${itemKey}. Field '${updatingFieldName}' was set to ${value}`)
+  }
+
+  console.log(`Finished updating table ${tableName}`);
+}
 
 export default executeQuery;

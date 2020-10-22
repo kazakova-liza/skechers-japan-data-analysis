@@ -14,7 +14,7 @@ const connectToDatabase = () => {
         host: 'localhost',
         user: 'root',
         password: 'password',
-        database: 'shoe_show'
+        database: 'belgium'
     };
     const connection = mysql.createConnection(config);
     connection.connect();

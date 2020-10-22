@@ -1,6 +1,6 @@
 
 
-export const get = `SELECT * from shoe_show.TABLE_NAME_PLACEHOLDER`;
+export const get = `SELECT * from belgium.TABLE_NAME_PLACEHOLDER where dimCode != ''`;
 
 
 

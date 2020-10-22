@@ -1,6 +1,9 @@
 install:
 	npm install
 
+main:
+	node src/server/main.js
+
 server:
 	node src/server/runServer.js
 
