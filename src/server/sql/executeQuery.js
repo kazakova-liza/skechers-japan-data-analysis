@@ -9,10 +9,14 @@ const executeQuery = async (action, tableName) => {
 
   try {
     switch (action) {
+      case 'getSQL':
+        console.log(get);
+        const records = await db.query(tableName);
+        return records;
       case 'getData':
         console.log(get);
-        const records = await db.query(get.replace('TABLE_NAME_PLACEHOLDER', tableName));
-        return records;
+        const records2 = await db.query(get.replace('TABLE_NAME_PLACEHOLDER', tableName));
+        return records2;
       case 'write':
         console.log(truncate.replace('TABLE_NAME_PLACEHOLDER', tableName));
         await db.query(truncate.replace('TABLE_NAME_PLACEHOLDER', tableName));
