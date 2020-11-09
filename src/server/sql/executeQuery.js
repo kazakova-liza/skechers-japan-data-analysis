@@ -1,27 +1,30 @@
 import connectToDatabase from './workWithSQL.js'
 import _ from 'lodash'
-// import cache from '../cache.js'
 import { get } from './queries.js'
 
 
-const executeQuery = async (action, tableName) => {
+const executeQuery = async (action, name, query) => {
   const db = connectToDatabase();
+  let records;
 
   try {
     switch (action) {
-      case 'getSQL':
-        console.log(get);
-        const records = await db.query(tableName);
+      case 'getSpecificData':
+        console.log(query);
+        records = await db.query(query.replace('TABLE_NAME_PLACEHOLDER', name));
         return records;
-      case 'getData':
+      case 'getSQL':
+        const sql = await db.query(name);
+        return sql;
+      case 'getAllData':
         console.log(get);
-        const records2 = await db.query(get.replace('TABLE_NAME_PLACEHOLDER', tableName));
-        return records2;
+        records = await db.query(get.replace('TABLE_NAME_PLACEHOLDER', name));
+        return records;
       case 'write':
-        console.log(truncate.replace('TABLE_NAME_PLACEHOLDER', tableName));
-        await db.query(truncate.replace('TABLE_NAME_PLACEHOLDER', tableName));
+        console.log(truncate.replace('TABLE_NAME_PLACEHOLDER', name));
+        await db.query(truncate.replace('TABLE_NAME_PLACEHOLDER', name));
         console.log(`table truncated`);
-        console.log(write.replace('TABLE_NAME_PLACEHOLDER', tableName));
+        console.log(write.replace('TABLE_NAME_PLACEHOLDER', name));
         console.log(cache.dataForMySql);
         const dataChunked = _.chunk(cache.dataForMySql, 10);
 
@@ -36,7 +39,7 @@ const executeQuery = async (action, tableName) => {
           ]);
           console.log(`Writing chunk of length ${items.length}:`);
           console.log(JSON.stringify(items))
-          await db.query(write.replace('TABLE_NAME_PLACEHOLDER', tableName), [items]);
+          await db.query(write.replace('TABLE_NAME_PLACEHOLDER', name), [items]);
           console.log(`Chunk has been written`);
         }
         break;
@@ -52,7 +55,9 @@ export const updateField = async (tableName, keyFieldName, updatingFieldName, it
 
   const db = connectToDatabase();
 
-  const sqlQueryPattern = 'UPDATE TABLE_NAME_PLACEHOLDER SET UPD_FIELD_PLACEHOLDER = ? WHERE KEY_FIELD_PLACEHOLDER = ?;'
+  const database = 'japan2';
+
+  const sqlQueryPattern = `UPDATE ${database}.TABLE_NAME_PLACEHOLDER SET UPD_FIELD_PLACEHOLDER = ? WHERE KEY_FIELD_PLACEHOLDER = ?;`
 
   const query = sqlQueryPattern
     .replace('TABLE_NAME_PLACEHOLDER', tableName)
@@ -60,11 +65,10 @@ export const updateField = async (tableName, keyFieldName, updatingFieldName, it
     .replace('KEY_FIELD_PLACEHOLDER', keyFieldName);
   console.log(query);
 
-  for (const itemKey in items) {
-    const value = items[itemKey];
-    await db.query(query, [value, itemKey]);
+  for (const item of items) {
+    await db.query(query, [item.sku, item.id]);
 
-    console.log(`Updated rows with [${keyFieldName}]=${itemKey}. Field '${updatingFieldName}' was set to ${value}`)
+    console.log(`Updated rows with [${keyFieldName}]=${item.id}. Field '${updatingFieldName}' was set to ${item.sku}`)
   }
 
   console.log(`Finished updating table ${tableName}`);

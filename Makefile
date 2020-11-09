@@ -7,8 +7,11 @@ main:
 server:
 	node src/server/runServer.js
 
-calc:
-	node src/server/phases/calculations.js
+sku:
+	node src/server/createSku.js
+
+asn:
+	node src/server/asn.js
 
 publish:
 	npm publish --dry-run
