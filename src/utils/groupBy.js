@@ -18,30 +18,30 @@ function groupBy(frm, bys, sums, dcnts) {
       for (let a = 0; a < bys.length; a++) {
         newRec2[bys[a]] = thisByRecArr[a];
       }
-      newRec2.cnt = 0;
+      // newRec2.cnt = 0;
       for (const sum of sums) {
         newRec2[`${sum}_sum`] = 0;
-        newRec2[`${sum}_max`] = 0;
+        // newRec2[`${sum}_max`] = 0;
       }
       dcntArr[thisByRecName] = {};
       for (const dcnt of dcnts) {
-        newRec2[`${dcnt}_dcnt`] = 0;
-        dcntArr[thisByRecName][dcnt] = new Set();
+        // newRec2[`${dcnt}_dcnt`] = 0;
+        // dcntArr[thisByRecName][dcnt] = new Set();
       }
       res3[thisByRecName] = newRec2;
     }
 
-    res3[thisByRecName].cnt += 1;
+    // res3[thisByRecName].cnt += 1;
     for (const sum of sums) {
       res3[thisByRecName][`${sum}_sum`] += record[sum];
-      if (record[sum] > res3[thisByRecName][`${sum}_max`]){
-        res3[thisByRecName][`${sum}_max`] = record[sum]
+      if (record[sum] > res3[thisByRecName][`${sum}_max`]) {
+        // res3[thisByRecName][`${sum}_max`] = record[sum]
       }
     }
-    for (const dcnt of dcnts) {
-      dcntArr[thisByRecName][dcnt].add(record[dcnt]);
-      res3[thisByRecName][`${dcnt}_dcnt`] = dcntArr[thisByRecName][dcnt].size;
-    }
+    // for (const dcnt of dcnts) {
+    //   dcntArr[thisByRecName][dcnt].add(record[dcnt]);
+    //   res3[thisByRecName][`${dcnt}_dcnt`] = dcntArr[thisByRecName][dcnt].size;
+    // }
   }
   const res4 = [];
   for (const [key, value] of Object.entries(res3)) {

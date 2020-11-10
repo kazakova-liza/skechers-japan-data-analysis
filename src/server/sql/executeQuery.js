@@ -1,9 +1,9 @@
 import connectToDatabase from './workWithSQL.js'
 import _ from 'lodash'
-import { get } from './queries.js'
+import { get, write } from './queries.js'
 
 
-const executeQuery = async (action, name, query) => {
+const executeQuery = async (action, name, query = undefined, data = undefined, fields = undefined) => {
   const db = connectToDatabase();
   let records;
 
@@ -21,25 +21,24 @@ const executeQuery = async (action, name, query) => {
         records = await db.query(get.replace('TABLE_NAME_PLACEHOLDER', name));
         return records;
       case 'write':
-        console.log(truncate.replace('TABLE_NAME_PLACEHOLDER', name));
-        await db.query(truncate.replace('TABLE_NAME_PLACEHOLDER', name));
-        console.log(`table truncated`);
-        console.log(write.replace('TABLE_NAME_PLACEHOLDER', name));
-        console.log(cache.dataForMySql);
-        const dataChunked = _.chunk(cache.dataForMySql, 10);
+        const dataChunked = _.chunk(data, 10000);
+
+        const query1 = write.replace('TABLE_NAME_PLACEHOLDER', name)
+          .replace('FIELDS_NAMES_PLACEHOLDER', fields);
+        console.log(query1);
 
         for (const chunk of dataChunked) {
-          const items = chunk.map(item => [
-            item.dte,
-            item.sku,
-            item.qty,
-            item.rackNum,
-            item.carton,
-            item.grp
-          ]);
-          console.log(`Writing chunk of length ${items.length}:`);
-          console.log(JSON.stringify(items))
-          await db.query(write.replace('TABLE_NAME_PLACEHOLDER', name), [items]);
+          // const items = chunk.map(item => [
+          //   item.dte,
+          //   item.sku,
+          //   item.qty,
+          //   item.rackNum,
+          //   item.carton,
+          //   item.grp
+          // ]);
+          // console.log(`Writing chunk of length ${items.length}:`);
+          // console.log(JSON.stringify(items))
+          await db.query(query1, [chunk]);
           console.log(`Chunk has been written`);
         }
         break;
