@@ -25,8 +25,8 @@ function groupBy(frm, bys, sums, dcnts) {
       }
       dcntArr[thisByRecName] = {};
       for (const dcnt of dcnts) {
-        // newRec2[`${dcnt}_dcnt`] = 0;
-        // dcntArr[thisByRecName][dcnt] = new Set();
+        newRec2[`${dcnt}_dcnt`] = 0;
+        dcntArr[thisByRecName][dcnt] = new Set();
       }
       res3[thisByRecName] = newRec2;
     }
@@ -38,10 +38,10 @@ function groupBy(frm, bys, sums, dcnts) {
         // res3[thisByRecName][`${sum}_max`] = record[sum]
       }
     }
-    // for (const dcnt of dcnts) {
-    //   dcntArr[thisByRecName][dcnt].add(record[dcnt]);
-    //   res3[thisByRecName][`${dcnt}_dcnt`] = dcntArr[thisByRecName][dcnt].size;
-    // }
+    for (const dcnt of dcnts) {
+      dcntArr[thisByRecName][dcnt].add(record[dcnt]);
+      res3[thisByRecName][`${dcnt}_dcnt`] = dcntArr[thisByRecName][dcnt].size;
+    }
   }
   const res4 = [];
   for (const [key, value] of Object.entries(res3)) {

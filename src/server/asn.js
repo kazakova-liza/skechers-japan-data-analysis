@@ -1,7 +1,5 @@
 import executeQuery from './sql/executeQuery.js'
-// import { updateField } from './sql/executeQuery.js' 
 import groupBy from '../utils/groupBy.js'
-import lodash from "lodash";
 
 
 const buildAsnStatistics = async () => {
@@ -34,16 +32,17 @@ const buildAsnStatistics = async () => {
             volBand = 'D';
         }
         item.palletsQty = Math.ceil(palletsQty);
+        item.pallEquiv = palletsQty;
         item.volBand = volBand;
         return item;
     })
     // console.log(processedData);
     const result = processedData.map((data) => {
-        return [data.shipment, data.receiveDate, data.verifiedDate, data.style, data.color, data.size, data.sku, data.unitsVerified_sum, data.casesVerified_sum, data.palletsQty, data.volBand];
+        return [data.shipment, data.receiveDate, data.verifiedDate, data.style, data.color, data.size, data.sku, data.unitsVerified_sum, data.casesVerified_sum, data.palletsQty, data.pallEquiv, data.volBand];
     })
     console.log(result);
 
-    const fields = 'shipment, receivedDate, verifiedDate, style, color, size, sku, units, cases, pallets, volBand';
+    const fields = 'shipment, receivedDate, verifiedDate, style, color, size, sku, units, cases, pallets, pallEquiv, volBand';
 
     // const resultChunked = lodash.chunk(result, 10);
 

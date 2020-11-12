@@ -28,16 +28,6 @@ const executeQuery = async (action, name, query = undefined, data = undefined, f
         console.log(query1);
 
         for (const chunk of dataChunked) {
-          // const items = chunk.map(item => [
-          //   item.dte,
-          //   item.sku,
-          //   item.qty,
-          //   item.rackNum,
-          //   item.carton,
-          //   item.grp
-          // ]);
-          // console.log(`Writing chunk of length ${items.length}:`);
-          // console.log(JSON.stringify(items))
           await db.query(query1, [chunk]);
           console.log(`Chunk has been written`);
         }
