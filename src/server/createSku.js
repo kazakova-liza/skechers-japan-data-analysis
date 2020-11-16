@@ -3,9 +3,9 @@ import { updateField } from './sql/executeQuery.js'
 
 
 const createSku = async () => {
-    const table = 'asn';
+    const table = 'crt';
     const data = await executeQuery('getAllData', table);
-    console.log(data[0]);
+    // console.log(data[0]);
 
     let skus = [];
     data.map((item) => {
@@ -17,10 +17,11 @@ const createSku = async () => {
         }
     });
 
-    console.log(skus[0]);
-    console.log(skus);
+    // console.log(skus[0]);
+    // console.log(skus);
 
     await updateField(table, 'id', 'sku', skus);
+    // console.log(`skus added to table ${table}`);
 }
 
 createSku();

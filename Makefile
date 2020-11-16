@@ -7,14 +7,29 @@ server:
 sku:
 	node src/server/createSku.js
 
+orders:
+	node src/server/orders.js
+
 asn:
 	node src/server/asn.js
+
+cust:
+	node src/server/customers.js
+
+cartons:
+	node src/server/cartons.js
+
+key:
+	node src/server/keyAccounts.js
 
 receiving:
 	node src/server/dailyReceving.js
 
 returns:
 	node src/server/dailyReturns.js
+
+shipments:
+	node src/server/shipments.js
 
 lint:
 	npx eslint ./

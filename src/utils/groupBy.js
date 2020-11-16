@@ -18,7 +18,7 @@ function groupBy(frm, bys, sums, dcnts) {
       for (let a = 0; a < bys.length; a++) {
         newRec2[bys[a]] = thisByRecArr[a];
       }
-      // newRec2.cnt = 0;
+      newRec2.cnt = 0;
       for (const sum of sums) {
         newRec2[`${sum}_sum`] = 0;
         // newRec2[`${sum}_max`] = 0;
@@ -31,7 +31,7 @@ function groupBy(frm, bys, sums, dcnts) {
       res3[thisByRecName] = newRec2;
     }
 
-    // res3[thisByRecName].cnt += 1;
+    res3[thisByRecName].cnt += 1;
     for (const sum of sums) {
       res3[thisByRecName][`${sum}_sum`] += record[sum];
       if (record[sum] > res3[thisByRecName][`${sum}_max`]) {

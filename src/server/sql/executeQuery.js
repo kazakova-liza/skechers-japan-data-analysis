@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { get, write } from './queries.js'
 
 
-const executeQuery = async (action, name, query = undefined, data = undefined, fields = undefined) => {
+const executeQuery = async (action, name = undefined, query = undefined, data = undefined, fields = undefined) => {
   const db = connectToDatabase();
   let records;
 
@@ -57,7 +57,7 @@ export const updateField = async (tableName, keyFieldName, updatingFieldName, it
   for (const item of items) {
     await db.query(query, [item.sku, item.id]);
 
-    console.log(`Updated rows with [${keyFieldName}]=${item.id}. Field '${updatingFieldName}' was set to ${item.sku}`)
+    // console.log(`Updated rows with [${keyFieldName}]=${item.id}. Field '${updatingFieldName}' was set to ${item.sku}`)
   }
 
   console.log(`Finished updating table ${tableName}`);
