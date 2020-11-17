@@ -42,17 +42,23 @@ const findKeyAccounts = (allOrds) => {
     var ctnArrSumBig = ctnArrSum.filter((a) => a.cnt > 71)
     // console.log(ctnArrSumBig[0]);
 
-    ctnArrSumBig.sort((a, b) => a.cnt - b.cnt);
+    //ctnArrSumBig.sort((a, b) => a.cnt - b.cnt);
+    let bominc = 0
+    ctnArrSumBig.forEach((mix) => {
+        mix.bom = bominc++
+    })
 
     const cartons = Object.keys(ctns);
 
     const keyCartons = [];
+    const keyCartonsArr = {}
 
     cartons.map((carton) => {
         const match = ctnArrSumBig.find((item) => item.mx === ctns[carton].toString());
         // console.log(match);
         if (match !== undefined) {
-            keyCartons.push(carton);
+            keyCartonsArr[carton] = match.bom
+            //keyCartons.push(carton);
         }
     })
 
@@ -62,7 +68,7 @@ const findKeyAccounts = (allOrds) => {
     // ]
     // addWS(wb1, 'key cartons', columns1, ctnArrSumBig);
     // wb1.write('ExcelFile2.xlsx')
-    return keyCartons;
+    return keyCartonsArr;
 }
 
 

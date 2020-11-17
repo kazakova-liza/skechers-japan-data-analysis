@@ -3,19 +3,19 @@ import util from 'util';
 
 
 const connectToDatabase = () => {
-    // const config = {
-    //     host: '192.168.1.210',//localhost
-    //     user: "remoteuser",//root
-    //     password: "remoteuser",//password
-    //     database: "japan_orders",//japan
-    // };
-
     const config = {
-        host: 'localhost',
-        user: 'root',
-        password: 'password',
-        database: 'japan2'
+        host: '192.168.1.210',//localhost
+        user: "remoteuser",//root
+        password: "remoteuser",//password
+        database: "japan2",//japan
     };
+
+    // const config = {
+    //     host: 'localhost',
+    //     user: 'root',
+    //     password: 'password',
+    //     database: 'japan2'
+    // };
     const connection = mysql.createConnection(config);
     connection.connect();
     return {

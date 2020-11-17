@@ -13,10 +13,10 @@ const buildOrdersStatistics = async () => {
                     c.orderType, c.carrier, c.printCode, c.generatedDate, 
                     c.leaveDate, c.stopShipDate, c.customer, c.division, 
                     c.dcNumber, c.aeonStDc, c.zipCode, c.combinePt
-                    FROM japan2.crtHeader a
-                    inner JOIN japan2.crt b
+                    FROM japan2.o_ctnHeader a
+                    inner JOIN japan2.o_ctnDetail b
                     ON a.carton = b.crtNumber
-                    INNER JOIN japan2.ptHeader c
+                    INNER JOIN japan2.o_ptHeader c
                     ON c.pickTicket = a.pickTicket`;
 
     const data = await executeQuery('getSpecificData', undefined, query);
