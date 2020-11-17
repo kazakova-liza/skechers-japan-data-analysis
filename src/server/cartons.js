@@ -1,5 +1,6 @@
 import executeQuery from './sql/executeQuery.js'
 import groupBy from '../utils/groupBy.js'
+import findKeyAccounts from './keyAccounts.js'
 
 
 const buildCartonsTable = async () => {
@@ -8,37 +9,51 @@ const buildCartonsTable = async () => {
     const data = await executeQuery('getAllData', table);
     console.log(data[0]);
 
-    const bys = ['carton', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'qty', 'division'];
-    const sums = ['packedUnit_int'];
-    const dcnts = [];
+    let bys = ['carton', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'qty', 'division'];
+    let sums = ['packedUnit_int'];
+    let dcnts = [];
 
     const grouppedData = groupBy(data, bys, sums, dcnts);
-    console.log(grouppedData[0]);
+    // console.log(grouppedData[0]);
 
-    grouppedData.map((carton) => {
+    const keyAccounts = findKeyAccounts(data);
+    let keyAccountObj = {};
+    keyAccounts.map((item) => {
+        keyAccountObj[item] = true;
+    })
+    console.log(keyAccounts[0]);
+
+    grouppedData.map((item) => {
         const popDivisions = ['Y', 'Z', 'ZZ', 'YSF', 'YYM'];
-        if (popDivisions.includes(carton.division)) {
-            carton.cartonType = 'POP';
+        if (popDivisions.includes(item.division)) {
+            item.cartonType = 'POP';
         }
-        else if (carton.division === 'SOCKS') {
-            carton.cartonType = 'SOCKS';
+        else if (item.division === 'YSO') {
+            item.cartonType = 'SOCKS';
         }
-        else if ()
-            if (carton.cnt === 1 && carton.packedUnit_int_sum >= qty) {
-                carton.cartonType = 'FC';
-            }
+        else if (item.carton in keyAccountObj) {
+            item.cartonType = 'key';
+        }
+        else if (item.cnt === 1 && item.packedUnit_int_sum >= 6) {
+            item.cartonType = 'FC';
+        }
+        else {
+            item.cartonType = 'active';
+        }
+        // console.log(item);
 
     })
 
+    const result = grouppedData.map((data) => {
+        //return [data.carton, data.leaveDate, data.customer, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_int_sum, data.cartonType];
+        return [data.carton, data.leaveDate, data.customer, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_int_sum, data.cartonType];
+    })
 
-    // const result = data.map((data) => {
-    //     return [data.cust];
-    // })
+    //const fields = 'carton, leaveDate, customer, printCode, shipTo, wave, lines, units, cartonType';
+    const fields = 'carton, leaveDate, customer, printCode, shipTo, wave, lines2, units, cartonType';
+    const newTable = 'cartons';
 
-    // const fields = 'custNumber';
-    // const newTable = 'cust';
-
-    // await executeQuery('write', newTable, undefined, result, fields);
+    await executeQuery('write', newTable, undefined, result, fields);
 }
 
 buildCartonsTable();
