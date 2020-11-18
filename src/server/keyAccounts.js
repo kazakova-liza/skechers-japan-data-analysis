@@ -14,9 +14,10 @@ const findKeyAccounts = (allOrds) => {
 
     var ctns = {}
     allOrds.forEach((act) => {
-        if (act.packedUnit_int > 0) {
+        if (act.packedUnit > 0) {
             if (!(act.carton in ctns)) {
                 ctns[act.carton] = []
+                ctns[act.carton].push('_' + act.wdate)
             }
             ctns[act.carton].push(act.sku + '-' + act.packedUnit.toString())
             // console.log(ctns);
@@ -30,7 +31,7 @@ const findKeyAccounts = (allOrds) => {
     var ctnArr = []
 
     for (const val of Object.values(ctns)) {
-        if (val.length > 1) {
+        if (val.length > 2) {
             ctnArr.push({ 'mx': val.toString() })
         }
     }
@@ -39,7 +40,7 @@ const findKeyAccounts = (allOrds) => {
 
     const ctnArrSum = groupBy(ctnArr, ['mx'], [], [])
 
-    var ctnArrSumBig = ctnArrSum.filter((a) => a.cnt > 71)
+    var ctnArrSumBig = ctnArrSum.filter((a) => a.cnt > 50)
     // console.log(ctnArrSumBig[0]);
 
     //ctnArrSumBig.sort((a, b) => a.cnt - b.cnt);

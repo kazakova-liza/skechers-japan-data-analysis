@@ -6,16 +6,23 @@ import groupBy from '../utils/groupBy.js'
 
 const test1 = async () => {
     const wb1 = new xl.Workbook();
-    // const table = 'orders';
-    const query = `SELECT left(wave,8) as wdate, CONCAT("b", bom) as bom, count(*) as cartons 
-                    FROM japan2.cartons
-                    WHERE bom != -1
-                    GROUP BY 1,2`;
 
-    const data = await executeQuery('getSpecificData', undefined, query);
+    // let query = `SELECT left(wave,8) as wdate, cartonType, count(*) as cartons 
+    //                 FROM japan2.cartons
+    //                 GROUP BY 1,2`;
+    // let xtabIn = {"rowKey":"wdate", "colKey":"cartonType", "sum":"cartons"}
+
+    let query = `SELECT left(wave,8) as wdate, cartonType, sum(units) as units 
+                    FROM japan2.cartons
+                    GROUP BY 1,2`;
+    let xtabIn = {"rowKey":"wdate", "colKey":"cartonType", "sum":"units"}
+
+
+
+    let data = await executeQuery('getSpecificData', undefined, query);
     console.log(data[0]);
     let xtab = {}
-    let xtabIn = {"rowKey":"bom", "colKey":"wdate", "sum":"cartons"}
+    
     data.forEach(element => {
         if (!(element[xtabIn.rowKey] in xtab)){
             xtab[element[xtabIn.rowKey]] = {}
@@ -27,26 +34,35 @@ const test1 = async () => {
     })
     let xtabRes = []
     let xtabColsObj = {}
-    let objIdx = 1
-    Object.keys(xtab).forEach((key) => {
-        xtab[key].key = key
-        xtabRes.push(xtab[key])
-        Object.keys(xtab[key]).forEach((col) => {
+    let objIdx = 2
+    Object.keys(xtab).forEach((row) => {
+        xtab[row][xtabIn.rowKey] = row
+        xtabRes.push(xtab[row])
+        Object.keys(xtab[row]).forEach((col) => {
             if (!(col in xtabColsObj)){
                 let ob = {}
                 ob.key = col
                 ob.name = col
-                ob.idx = objIdx++
-                ob.type = 'number'
+                if (col == xtabIn.rowKey){
+                    ob.idx = 1
+                    ob.type = 'string'
+                }else{
+                    ob.idx = objIdx++
+                    ob.type = 'number'
+                }
                 xtabColsObj[col] = ob
             }
         })
     })
-    xtabColsObj.key.type = 'string'
     let xtabColsArr = Object.values(xtabColsObj)
-    addWS(wb1, 'bom', xtabColsArr, xtabRes);
+    addWS(wb1, 'days', xtabColsArr, xtabRes);
+    
+    
     wb1.write('ExcelFile3.xlsx')
     
+
+
+
 
 }
 

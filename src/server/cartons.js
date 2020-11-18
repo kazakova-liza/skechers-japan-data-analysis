@@ -4,13 +4,16 @@ import findKeyAccounts from './keyAccounts.js'
 
 
 const buildCartonsTable = async () => {
-    const table = 'orders';
+    
 
-    const data = await executeQuery('getAllData', table);
-    console.log(data[0]);
+    const query = `SELECT carton, leaveDate, customer, printCode, soldTo, shipTo, wave, division, packedUnit, sku, left(wave, 8) as wdate 
+                    FROM japan2.orders`;
+
+    const data = await executeQuery('getSpecificData', undefined, query);
+
 
     let bys = ['carton', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'qty', 'division'];
-    let sums = ['packedUnit_int'];
+    let sums = ['packedUnit'];
     let dcnts = [];
 
     const grouppedData = groupBy(data, bys, sums, dcnts);
@@ -36,7 +39,7 @@ const buildCartonsTable = async () => {
             item.cartonType = 'key';
             item.bom = keyAccounts[item.carton]
         }
-        else if (item.cnt === 1 && item.packedUnit_int_sum >= 6) {
+        else if (item.cnt === 1 && item.packedUnit_sum >= 6) {
             item.cartonType = 'FC';
         }
         else {
@@ -48,7 +51,7 @@ const buildCartonsTable = async () => {
 
     const result = grouppedData.map((data) => {
         //return [data.carton, data.leaveDate, data.customer, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_int_sum, data.cartonType];
-        return [data.carton, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_int_sum, data.cartonType, data.bom];
+        return [data.carton, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_sum, data.cartonType, data.bom];
     })
 
     //const fields = 'carton, leaveDate, customer, printCode, shipTo, wave, lines, units, cartonType';
