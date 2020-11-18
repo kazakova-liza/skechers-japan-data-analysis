@@ -4,7 +4,7 @@ import findKeyAccounts from './keyAccounts.js'
 
 
 const buildCartonsTable = async () => {
-    
+
 
     const query = `SELECT carton, leaveDate, customer, printCode, soldTo, shipTo, wave, division, packedUnit, sku, left(wave, 8) as wdate 
                     FROM japan2.orders`;
@@ -58,7 +58,7 @@ const buildCartonsTable = async () => {
     const fields = 'carton, leaveDate, customer, soldTo, printCode, shipTo, wave, lines2, units, cartonType, bom';
     const newTable = 'cartons';
 
-    await executeQuery('write', newTable, undefined, result, fields);
+    await executeQuery('write', newTable, undefined, result, fields, true);
 }
 
 buildCartonsTable();

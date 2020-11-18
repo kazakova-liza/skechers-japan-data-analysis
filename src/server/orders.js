@@ -1,5 +1,5 @@
 import executeQuery from './sql/executeQuery.js'
-import groupBy from '../utils/groupBy.js'
+// import groupBy from '../utils/groupBy.js'
 
 
 const buildOrdersStatistics = async () => {
@@ -23,7 +23,7 @@ const buildOrdersStatistics = async () => {
     console.log(data[0]);
 
     const result = data.map((data) => {
-        return [data.carton, data.pickTicket, data.wave,  data.pallet, data.psGenerated, data.psGeneratedOnCarton, data.crtStatus, data.crtSize, data.crtStatusFromHeader, data.style, data.color, data.size, data.sku, data.packedUnit, data.toBePick, data.crtStatusFromCrt, data.leadTime, data.soldTo, data.shipTo, data.pickTicketStatus, data.orderType, data.carrier, data.printCode, data.generatedDate, data.leaveDate, data.stopShipDate, data.customer, data.division, data.dcNumber, data.aeonStDc, data.zipCode, data.combinePt];
+        return [data.carton, data.pickTicket, data.wave, data.pallet, data.psGenerated, data.psGeneratedOnCarton, data.crtStatus, data.crtSize, data.crtStatusFromHeader, data.style, data.color, data.size, data.sku, data.packedUnit, data.toBePick, data.crtStatusFromCrt, data.leadTime, data.soldTo, data.shipTo, data.pickTicketStatus, data.orderType, data.carrier, data.printCode, data.generatedDate, data.leaveDate, data.stopShipDate, data.customer, data.division, data.dcNumber, data.aeonStDc, data.zipCode, data.combinePt];
     })
 
     const fields = 'carton, pickTicket, wave,  pallet, psGenerated, psGeneratedOnCarton, crtStatus, crtSize, crtStatusFromHeader, style, color, size, sku, packedUnit, toBePick, crtStatusFromCrt, leadTime, soldTo, shipTo, pickTicketStatus, orderType, carrier, printCode, generatedDate, leaveDate, stopShipDate, customer, division, dcNumber, aeonStDc, zipCode, combinePt';
