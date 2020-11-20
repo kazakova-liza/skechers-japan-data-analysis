@@ -13,6 +13,9 @@ orders:
 asn:
 	node src/server/asn.js
 
+vas:
+	node src/server/vas.js
+
 cust:
 	node src/server/customers.js
 
