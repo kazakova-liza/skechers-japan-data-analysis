@@ -13,6 +13,9 @@ orders:
 asn:
 	node src/server/asn.js
 
+affinity:
+	node src/server/affinity.js
+
 vas:
 	node src/server/vas.js
 

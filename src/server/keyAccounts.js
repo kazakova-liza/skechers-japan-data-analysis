@@ -4,13 +4,16 @@ import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 
 
-const findKeyAccounts = (allOrds) => {
-    const wb1 = new xl.Workbook();
+const findKeyAccounts = async(allOrds) => {
+    if (allOrds == undefined){
+        const query = `SELECT carton, packedUnit, sku, left(wave, 8) as wdate,left(customer, 9) as scust
+                        FROM japan2.orders where left(wave, 8) = '20200324'`;
 
-    // const table = 'orders';
-    // const allOrds = await executeQuery('getAllData', table);
+        allOrds = await executeQuery('getSpecificData', undefined, query);
+    }
 
-    // console.log(allOrds[0]);
+
+    console.log(allOrds[0]);
 
     var ctns = {}
     allOrds.forEach((act) => {
@@ -62,7 +65,7 @@ const findKeyAccounts = (allOrds) => {
             //keyCartons.push(carton);
         }
     })
-
+    //const wb1 = new xl.Workbook();
     // const columns1 = [
     //     { "key": "mx", "name": "mix", "idx": 1, "type": "string" },
     //     { "key": "cnt", "name": "cartons", "idx": 2, "type": "number" },
@@ -73,7 +76,7 @@ const findKeyAccounts = (allOrds) => {
 }
 
 
-// findKeyAccounts();
+findKeyAccounts(undefined);
 
 export default findKeyAccounts;
 
