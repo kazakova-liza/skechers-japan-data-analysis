@@ -2,7 +2,7 @@ import executeQuery from './sql/executeQuery.js'
 // import groupBy from '../utils/groupBy.js'
 
 
-const buildOrdersStatistics = async () => {
+const createSasn = async () => {
     // const table = 'asn';
     const query = `SELECT a.carton, a.pickTicket, a.wave, a.pallet, a.psGenerated,
                     a.psGeneratedOnCarton, a.crtStatus, a.crtSize, 
@@ -27,9 +27,9 @@ const buildOrdersStatistics = async () => {
     })
 
     const fields = 'carton, pickTicket, wave,  pallet, psGenerated, psGeneratedOnCarton, crtStatus, crtSize, crtStatusFromHeader, style, color, size, sku, packedUnit, toBePick, crtStatusFromCrt, leadTime, soldTo, shipTo, pickTicketStatus, orderType, carrier, printCode, generatedDate, leaveDate, stopShipDate, customer, division, dcNumber, aeonStDc, zipCode, combinePt';
-    const newTable = 'orders';
+    const newTable = 'suns';
 
     await executeQuery('write', newTable, undefined, result, fields);
 }
 
-buildOrdersStatistics();
+createSasn();

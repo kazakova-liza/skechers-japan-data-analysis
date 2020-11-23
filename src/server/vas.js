@@ -1,4 +1,5 @@
 import executeQuery from './sql/executeQuery.js'
+import { updateField } from './sql/executeQuery.js'
 
 
 const createVasType = async () => {

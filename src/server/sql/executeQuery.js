@@ -59,7 +59,7 @@ export const updateField = async (tableName, keyFieldName, updatingFieldName, it
   console.log(query);
 
   for (const item of items) {
-    await db.query(query, [item.sku, item.id]);
+    await db.query(query, [item[updatingFieldName], item[keyFieldName]]);
 
     // console.log(`Updated rows with [${keyFieldName}]=${item.id}. Field '${updatingFieldName}' was set to ${item.sku}`)
   }
