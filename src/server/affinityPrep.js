@@ -14,6 +14,7 @@ const affinityPrep = (data) => {
     //MAKE AFFINITY ARRAY
     let affAll = []
     ctnList.forEach(o1 => {
+        let foundOne = false
         const ord1 = ctns[o1]
         const affinity = ctnList.reduce((acc, ord) => {
             if (ord == o1) return acc
@@ -23,12 +24,13 @@ const affinityPrep = (data) => {
             const iLen = intercection.length
             const dLen = difference.length
             if (iLen > 0) {
+                foundOne = true
                 const aff = iLen / (dLen + iLen)
                 acc.push({ "ord1": o1, "ord2": ord, "aff": aff, "ord1Len": ord1.length, "ord2Len": ord2.length })
             }
             return acc
         }, [])
-
+        if (foundOne == false)console.log('no friends' + o1)
         affAll = affAll.concat(affinity)
     });
     // affAll.sort((a, b) => b.aff - a.aff || b.ord1Len - a.ord1Len);

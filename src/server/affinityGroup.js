@@ -40,7 +40,7 @@ const affinityGroup = (affAll, grpNum = 0) => {
             const bb = grpList.includes(checkAff.ord2)
             return !(aa || bb)
         })
-        // console.log(grpNum, grpList.length, cache.affAll.length)
+         console.log(grpNum, grpList.length, affAll.length)
     }
 
     console.log(Object.values(allGrps).length);
