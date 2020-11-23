@@ -6,24 +6,20 @@ import findKeyAccounts from './keyAccounts.js'
 const buildCartonsTable = async () => {
 
 
-    const query = `SELECT carton, leaveDate, customer, printCode, soldTo, shipTo, wave, division, packedUnit, sku, left(wave, 8) as wdate 
+    const query = `SELECT carton, leaveDate, customer, printCode, soldTo, shipTo, wave, division, packedUnit, sku, left(wave, 8) as wdate, vas 
                     FROM japan2.orders`;
 
     const data = await executeQuery('getSpecificData', undefined, query);
 
 
-    let bys = ['carton', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'qty', 'division'];
+    let bys = ['carton', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'qty', 'division', 'vas'];
     let sums = ['packedUnit'];
     let dcnts = [];
 
     const grouppedData = groupBy(data, bys, sums, dcnts);
-    // console.log(grouppedData[0]);
 
     const keyAccounts = findKeyAccounts(data);
-    //let keyAccountObj = {};
-    //keyAccounts.map((item) => {
-    //    keyAccountObj[item] = true;
-    //})
+
     console.log(keyAccounts[0]);
 
     grouppedData.map((item) => {
@@ -45,20 +41,26 @@ const buildCartonsTable = async () => {
         else {
             item.cartonType = 'active';
         }
-        // console.log(item);
+
 
     })
 
     const result = grouppedData.map((data) => {
-        //return [data.carton, data.leaveDate, data.customer, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_int_sum, data.cartonType];
-        return [data.carton, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_sum, data.cartonType, data.bom];
+         return [data.carton, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_sum, data.cartonType, data.bom, data.vas];
     })
 
-    //const fields = 'carton, leaveDate, customer, printCode, shipTo, wave, lines, units, cartonType';
-    const fields = 'carton, leaveDate, customer, soldTo, printCode, shipTo, wave, lines2, units, cartonType, bom';
+    const fields = 'carton, leaveDate, customer, soldTo, printCode, shipTo, wave, lines2, units, cartonType, bom, vas';
     const newTable = 'cartons';
 
     await executeQuery('write', newTable, undefined, result, fields, true);
+
+    const sql3 = `ALTER TABLE japan2.orders ADD COLUMN cartonType VARCHAR(45) NULL AFTER id;`
+    const res3 = await executeQuery('getSpecificData', undefined, sql3);
+    console.log(res3)
+
+    const sql4 = `UPDATE orders INNER JOIN cartons ON orders.carton = cartons.carton SET orders.cartonType = cartons.cartonType `
+    const res4 = await executeQuery('getSpecificData', undefined, sql4);
+    console.log(res4)
 }
 
 buildCartonsTable();

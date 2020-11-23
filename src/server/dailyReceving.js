@@ -4,8 +4,8 @@ import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 
 const table = 'sasn';
-// const type = 'greaterThan100Cases';
-const type = 'lessThan100Cases';
+const type = 'greaterThan100Cases';
+//const type = 'lessThan100Cases';
 
 const buildSasnStatistics = async () => {
     let condition;
