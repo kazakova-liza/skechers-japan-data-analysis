@@ -24,6 +24,7 @@ const affinityGroup = (affAll, grpNum = 0) => {
             }
             grpList = grpList.concat(candidate.map(a => a.ord2))
             grpList = Array.from(new Set(grpList))
+            grpList = grpList.filter(function (el) {return el != null});
             if (grpList.length > groupSize) break
             //console.log(grpList.length, affAll.length)
         }

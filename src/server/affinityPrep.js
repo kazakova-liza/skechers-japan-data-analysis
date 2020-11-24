@@ -30,10 +30,12 @@ const affinityPrep = (data) => {
             }
             return acc
         }, [])
-        if (foundOne == false)console.log('no friends' + o1)
+        if (foundOne == false){
+            console.log('no friends' + o1)
+        }
         affAll = affAll.concat(affinity)
     });
-    // affAll.sort((a, b) => b.aff - a.aff || b.ord1Len - a.ord1Len);
+     affAll.sort((a, b) => b.aff - a.aff || b.ord1Len - a.ord1Len);
 
     // console.log(affAll);
 
