@@ -12,7 +12,8 @@ const affinityPrep = (data) => {
     const ctnList = Object.keys(ctns)
     // console.log(ctnList.length);
     //MAKE AFFINITY ARRAY
-    let affAll = []
+    let affAll = [];
+    let noFriends = [];
     ctnList.forEach(o1 => {
         let foundOne = false
         const ord1 = ctns[o1]
@@ -30,16 +31,20 @@ const affinityPrep = (data) => {
             }
             return acc
         }, [])
-        if (foundOne == false){
-            console.log('no friends' + o1)
+        if (foundOne == false) {
+            // console.log('no friends' + o1);
+            noFriends.push({ "ord1": o1, "ord2": undefined, "aff": 0, "ord1Len": ord1.length, "ord2Len": undefined })
         }
         affAll = affAll.concat(affinity)
     });
-     affAll.sort((a, b) => b.aff - a.aff || b.ord1Len - a.ord1Len);
+    affAll.sort((a, b) => b.aff - a.aff || b.ord1Len - a.ord1Len);
 
     // console.log(affAll);
 
-    return affAll;
+    return {
+        affAll,
+        noFriends
+    }
 }
 
 export default affinityPrep;

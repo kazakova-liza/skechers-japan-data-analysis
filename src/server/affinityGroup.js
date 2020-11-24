@@ -24,7 +24,7 @@ const affinityGroup = (affAll, grpNum = 0) => {
             }
             grpList = grpList.concat(candidate.map(a => a.ord2))
             grpList = Array.from(new Set(grpList))
-            grpList = grpList.filter(function (el) {return el != null});
+            grpList = grpList.filter(function (el) { return el != null });
             if (grpList.length > groupSize) break
             //console.log(grpList.length, affAll.length)
         }
@@ -41,10 +41,10 @@ const affinityGroup = (affAll, grpNum = 0) => {
             const bb = grpList.includes(checkAff.ord2)
             return !(aa || bb)
         })
-         console.log(grpNum, grpList.length, affAll.length)
+        console.log(grpNum, grpList.length, affAll.length)
     }
 
-    console.log(Object.values(allGrps).length);
+    // console.log(Object.values(allGrps).length);
 
     return {
         allGroups: allGrps,
