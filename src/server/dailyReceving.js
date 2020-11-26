@@ -43,14 +43,14 @@ const buildSasnStatistics = async () => {
 
     const result = grouppedByDate.map((item) => {
         const volBands = grouppedByDateVolBand.filter((el) => el.verifiedDate === item.verifiedDate);
-        let acBandsPalletsSum = 0;
-        let dBandCasesSum = 0;
+        let abBandsPalletsSum = 0;
+        let cdBandCasesSum = 0;
         volBands.map((el) => {
-            if (el.volBand === 'A' || el.volBand === 'B' || el.volBand === 'C') {
-                acBandsPalletsSum += el.pallets_sum;
+            if (el.volBand === 'A' || el.volBand === 'B') {
+                abBandsPalletsSum += el.pallets_sum;
             }
-            if (el.volBand === 'D') {
-                dBandCasesSum += el.cases_sum;
+            if (el.volBand === 'D' || el.volBand === 'C') {
+                cdBandCasesSum += el.cases_sum;
             }
         })
         return {
@@ -62,18 +62,29 @@ const buildSasnStatistics = async () => {
             unitsSum: item.units_sum,
             dSkus: item.sku_dcnt,
             dStyles: item.style_dcnt,
-            acBandsPalletsSum,
-            dBandCasesSum
+            abBandsPalletsSum,
+            cdBandCasesSum
         }
     })
     return result;
 }
 
+const getVolBandStatistics = async () => {
+    const query = `SELECT volBand, COUNT(*), SUM(units), SUM(cases), SUM(pallets), 
+                SUM(pallequiv), count(distinct sku), count(distinct shipment) 
+                FROM japan2.sasn GROUP BY volband`;
+
+    const data = await executeQuery('getSpecificData', undefined, query);
+    console.log(data[0]);
+    return data;
+}
+
 const main = async () => {
     const statistics = await buildSasnStatistics();
     console.log(statistics)
+    const volBandStat = await getVolBandStatistics();
     const workBook = new xl.Workbook();
-    const columns = [
+    const columns1 = [
         { key: "date", name: "Date", idx: 1, type: "objToString" },
         { key: "containers", name: "containers", idx: 2, type: "number" },
         { key: "palletsSum", name: "palletsSum", idx: 3, type: "number" },
@@ -85,7 +96,21 @@ const main = async () => {
         { key: "acBandsPalletsSum", name: "acBandsPalletsSum", idx: 9, type: "number" },
         { key: "dBandCasesSum", name: "dBandCasesSum", idx: 10, type: "number" },
     ]
-    addWS(workBook, type, columns, statistics);
+    addWS(workBook, type, columns1, statistics);
+    workBook.write(`asn_${type}.xlsx`);
+
+    const columns2 = [
+        { key: "volBand", name: "volBand", idx: 1, type: "string" },
+        { key: "COUNT(*)", name: "count", idx: 2, type: "number" },
+        { key: "SUM(units)", name: "unitsSum", idx: 3, type: "number" },
+        { key: "SUM(cases)", name: "casesSum", idx: 4, type: "number" },
+        { key: "SUM(pallets)", name: "palletsSum", idx: 5, type: "number" },
+        { key: "SUM(pallequiv)", name: "pallEquivSum", idx: 6, type: "number" },
+        { key: "count(distinct sku)", name: "skus", idx: 7, type: "number" },
+        { key: "count(distinct shipment)", name: "shipments", idx: 8, type: "number" },
+    ];
+
+    addWS(workBook, 'volBands', columns2, volBandStat);
     workBook.write(`asn_${type}.xlsx`);
 }
 

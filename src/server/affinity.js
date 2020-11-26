@@ -39,6 +39,9 @@ const createAffinity = async () => {
 
     const smallCustAff = affinityPrep(smallCustomersOrders);
     const smallCustGroups = affinityGroup(smallCustAff.affAll, groupNumber);
+    const ords1 = smallCustAff.affAll.map((item) => item.ord1);
+    const uniqueOrds1 = new Set(ords1);
+    const uniqueOrds1Length = uniqueOrds1.length;
     groupNumber = smallCustGroups.groupNumber;
     console.log(`small cust groups: ${Object.keys(smallCustGroups.allGroups).length}`);
     const smallCustNoFriendsGroups = makeFriends(smallCustAff.noFriends, groupNumber);
@@ -74,6 +77,8 @@ const createAffinity = async () => {
 
     ords2.sort((a, b) => { return a.sku.localeCompare(b.sku) || a.putGrp - b.putGrp });
     const affResAll = groupBy(ords2, ['putGrp'], ['packedUnit'], ['carton', 'sku'])
+    const affResAllFiltered = affResAll.filter((res) => res.putGrp != 'null');
+    // console.log(affResAllFiltered);
 
 
     // console.log(affResAll[0])
@@ -87,10 +92,10 @@ const createAffinity = async () => {
         { key: "carton_dcnt", name: "carton_dcnt", idx: 4, type: "number" },
         { key: "sku_dcnt", name: "sku_dcnt", idx: 5, type: "number" },
     ]
-    addWS(workBook, 'affAll', columns, affResAll);
+    addWS(workBook, 'affAll', columns, affResAllFiltered);
     workBook.write(`affinity.xlsx`);
 
-    var statsAll = affResAll.reduce((stats, grp) => {
+    var statsAll = affResAllFiltered.reduce((stats, grp) => {
         stats.grps++
         stats.skus += grp.sku_dcnt
         stats.ctns += grp.carton_dcnt
@@ -99,9 +104,22 @@ const createAffinity = async () => {
         return stats
     }, { "grps": 0, "skus": 0, "ctns": 0, "qty": 0, "lines": 0 });
 
-    const smallCustRes = groupBy(smallCustomersOrds, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
+    const columnsTotal =
+        [
+            { key: "grps", name: "grps", idx: 1, type: "number" },
+            { key: "skus", name: "skus", idx: 2, type: "number" },
+            { key: "ctns", name: "ctns", idx: 3, type: "number" },
+            { key: "qty", name: "qty", idx: 4, type: "number" },
+            { key: "lines", name: "lines", idx: 5, type: "number" },
+        ];
 
-    addWS(workBook, 'affSmall', columns, smallCustRes);
+    addWS(workBook, 'affAll_stats', columnsTotal, [statsAll]);
+    workBook.write(`affinity.xlsx`);
+
+    const smallCustRes = groupBy(smallCustomersOrds, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
+    const smallCustResFiltered = smallCustRes.filter((res) => res.putGrp != 'null');
+
+    addWS(workBook, 'affSmall', columns, smallCustResFiltered);
     workBook.write(`affinity.xlsx`);
 
     var statsSmall = smallCustRes.reduce((stats, grp) => {
@@ -112,6 +130,31 @@ const createAffinity = async () => {
         stats.lines += grp.cnt
         return stats
     }, { "grps": 0, "skus": 0, "ctns": 0, "qty": 0, "lines": 0 });
+
+    addWS(workBook, 'affSmall_stats', columnsTotal, [statsSmall]);
+    workBook.write(`affinity.xlsx`);
+
+    bigCustomersNames.map((cust) => {
+        const ords = bigCustomerOrds.filter((order) => order.cust);
+        const affRes = groupBy(ords, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
+        const affResFiltered = affRes.filter((res) => res.putGrp != 'null');
+
+        addWS(workBook, cust, columns, affResFiltered);
+        workBook.write(`affinity.xlsx`);
+
+        var stats = affRes.reduce((stats, grp) => {
+            stats.grps++
+            stats.skus += grp.sku_dcnt
+            stats.ctns += grp.carton_dcnt
+            stats.qty += grp.packedUnit_sum
+            stats.lines += grp.cnt
+            return stats
+        }, { "grps": 0, "skus": 0, "ctns": 0, "qty": 0, "lines": 0 });
+
+        addWS(workBook, `${cust}_stats`, columnsTotal, [stats]);
+        workBook.write(`affinity.xlsx`);
+
+    })
 
 }
 

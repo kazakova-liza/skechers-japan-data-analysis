@@ -31,9 +31,10 @@ const executeQuery = async (action, name = undefined, query = undefined, data = 
           .replace('FIELDS_NAMES_PLACEHOLDER', fields);
         console.log(query1);
 
-        for (const chunk of dataChunked) {
+        for (let chunk of dataChunked) {
           await db.query(query1, [chunk]);
           console.log(`Chunk has been written`);
+          chunk = null;
         }
         break;
     }
