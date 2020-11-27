@@ -24,6 +24,7 @@ const test1 = async () => {
 
     let dyVasUnits = groupBy(data, ['wdate', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'], ['units'], [])
     xtabIn = { "rowKey": "wdate", "colKey": "vas", "sum": "units_sum" }
+    //4 diff spreadsheets, same columns (do not need to repeat column array)
     const xtab2 = createCrossTab(dyVasUnits, xtabIn);
     addWS(wb1, 'daysvasxtab', xtab2.colsArr, xtab2.res);
 

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { get, write, truncateTable } from './queries.js'
 
 
-const executeQuery = async (action, name = undefined, query = undefined, data = undefined, fields = undefined, truncate = false) => {
+export const executeQuery = async (action, name = undefined, query = undefined, data = undefined, fields = undefined, truncate = false) => {
   const db = connectToDatabase();
   let records;
 
@@ -68,4 +68,3 @@ export const updateField = async (tableName, keyFieldName, updatingFieldName, it
   console.log(`Finished updating table ${tableName}`);
 }
 
-export default executeQuery;

@@ -1,5 +1,5 @@
 import executeQuery from './sql/executeQuery.js'
-import addVasType from './vas.js';
+import addVasType from './vas/addVas.js';
 
 
 const createOrdersTable = async () => {
@@ -18,14 +18,18 @@ const createOrdersTable = async () => {
                     INNER JOIN japan2.o_ptHeader c
                     ON c.pickTicket = a.pickTicket`;
 
-    const data = await executeQuery('getSpecificData', undefined, query);
+    let data = await executeQuery('getSpecificData', undefined, query);
     console.log(data[0]);
 
-    const dataWithVas = addVasType(data);
+    let dataWithVas = addVasType(data);
+
+    data = null;
 
     const result = dataWithVas.map((data) => {
         return [data.carton, data.pickTicket, data.wave, data.pallet, data.psGenerated, data.psGeneratedOnCarton, data.crtStatus, data.crtSize, data.crtStatusFromHeader, data.style, data.color, data.size, data.sku, data.packedUnit, data.toBePick, data.crtStatusFromCrt, data.leadTime, data.soldTo, data.shipTo, data.pickTicketStatus, data.orderType, data.carrier, data.printCode, data.generatedDate, data.leaveDate, data.stopShipDate, data.customer, data.division, data.dcNumber, data.aeonStDc, data.zipCode, data.combinePt, data.inspection, data.shoeTag, data.shoeBoxTag, data.cartonTag];
     })
+
+    dataWithVas = null;
 
     const fields = 'carton, pickTicket, wave,  pallet, psGenerated, psGeneratedOnCarton, crtStatus, crtSize, crtStatusFromHeader, style, color, size, sku, packedUnit, toBePick, crtStatusFromCrt, leadTime, soldTo, shipTo, pickTicketStatus, orderType, carrier, printCode, generatedDate, leaveDate, stopShipDate, customer, division, dcNumber, aeonStDc, zipCode, combinePt, inspection, shoeTag, shoeBoxTag, cartonTag';
     const newTable = 'orders';

@@ -16,8 +16,8 @@ asn:
 affinity:
 	node src/server/affinity.js
 
-vas:
-	node src/server/vas.js
+stat:
+	node src/server/vas/vasStat.js
 
 cust:
 	node src/server/customers.js

@@ -1,4 +1,4 @@
-import executeQuery from './sql/executeQuery.js'
+import { executeQuery } from './sql/executeQuery.js'
 import groupBy from '../utils/groupBy.js'
 import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
@@ -93,8 +93,8 @@ const main = async () => {
         { key: "unitsSum", name: "unitsSum", idx: 6, type: "number" },
         { key: "dSkus", name: "dSkus", idx: 7, type: "number" },
         { key: "dStyles", name: "dStyles", idx: 8, type: "number" },
-        { key: "acBandsPalletsSum", name: "acBandsPalletsSum", idx: 9, type: "number" },
-        { key: "dBandCasesSum", name: "dBandCasesSum", idx: 10, type: "number" },
+        { key: "abBandsPalletsSum", name: "abBandsPalletsSum", idx: 9, type: "number" },
+        { key: "cdBandCasesSum", name: "cdBandCasesSum", idx: 10, type: "number" },
     ]
     addWS(workBook, type, columns1, statistics);
     workBook.write(`asn_${type}.xlsx`);
