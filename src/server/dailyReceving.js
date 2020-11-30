@@ -4,8 +4,8 @@ import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 
 const table = 'sasn';
-const type = 'greaterThan100Cases';
-//const type = 'lessThan100Cases';
+//const type = 'greaterThan100Cases';
+const type = 'lessThan100Cases';
 
 const buildSasnStatistics = async () => {
     let condition;
@@ -70,9 +70,10 @@ const buildSasnStatistics = async () => {
 }
 
 const getVolBandStatistics = async () => {
+
     const query = `SELECT volBand, COUNT(*), SUM(units), SUM(cases), SUM(pallets), 
                 SUM(pallequiv), count(distinct sku), count(distinct shipment) 
-                FROM japan2.sasn GROUP BY volband`;
+                FROM japan2.sasn GROUP BY volband having ${condition}`;
 
     const data = await executeQuery('getSpecificData', undefined, query);
     console.log(data[0]);

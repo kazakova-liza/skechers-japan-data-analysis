@@ -1,17 +1,10 @@
-import executeQuery from './sql/executeQuery.js'
+import {executeQuery} from './sql/executeQuery.js'
 import groupBy from '../utils/groupBy.js'
 import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 
 
 const findKeyAccounts = async(allOrds) => {
-    if (allOrds == undefined){
-        const query = `SELECT carton, packedUnit, sku, left(wave, 8) as wdate,left(customer, 9) as scust
-                        FROM japan2.orders where left(wave, 8) = '20200324'`;
-
-        allOrds = await executeQuery('getSpecificData', undefined, query);
-    }
-
 
     console.log(allOrds[0]);
 
@@ -75,8 +68,6 @@ const findKeyAccounts = async(allOrds) => {
     return keyCartonsArr;
 }
 
-
-findKeyAccounts(undefined);
 
 export default findKeyAccounts;
 

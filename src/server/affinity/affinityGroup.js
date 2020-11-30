@@ -1,6 +1,6 @@
 
 const affinityGroup = (affAll, grpNum = 0) => {
-    const groupSize = 20;
+    const groupSize = 10;
     const allGrps = {}
     //for(let grpNum = 0; grpNum < 500; grpNum++){
     while (affAll.length > 0) {

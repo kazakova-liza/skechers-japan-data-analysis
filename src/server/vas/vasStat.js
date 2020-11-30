@@ -10,9 +10,9 @@ const createVasStat = async () => {
     const table = 'orders';
 
     const query = `SELECT carton, soldTo,
-                    shipTo, wave, packedUnit, sku, left(wave, 8) as wdate,
-                    inspection, shoeTag, shoeBoxLabel, cartonLabel, left(customer, 9) as scust, cartonType
-                    FROM japan2.orders`;
+                    shipTo, wave, units, left(wave, 8) as wdate,
+                    inspection, shoeTag, shoeBoxLabel, cartonLabel, left(customer, 9) as scust, cartonType, vasTime
+                    FROM japan2.cartons`;
 
     const data = await executeQuery('getSpecificData', table, query);
     console.log(data[0]);
@@ -26,6 +26,8 @@ const createVasStat = async () => {
     const keyAccountsVas = vasByDate(keyAccounts);
     const fullCasesVas = vasByDate(fullCases);
     const activeVas = vasByDate(active);
+
+
 
     return {
         byDate,
@@ -50,6 +52,9 @@ const main = async () => {
         { key: "cartonsShoeBoxLabel", name: "cartonsShoeBoxLabel", idx: 7, type: "number" },
         { key: "unitsCartonLabel", name: "unitsCartonLabel", idx: 8, type: "number" },
         { key: "cartonsCartonLabel", name: "cartonsCartonLabel", idx: 9, type: "number" },
+        { key: "vasCtns", name: "vasCtns", idx: 10, type: "number" },
+        { key: "vasUnits", name: "vasUnits", idx: 11, type: "number" },
+        { key: "vasTime", name: "vasTime", idx: 12, type: "number" },
     ]
     addWS(workBook, 'by date', columns1, statistics.byDate);
     workBook.write(`vas.xlsx`);
@@ -64,6 +69,9 @@ const main = async () => {
         { key: "cartonsShoeBoxLabel", name: "cartonsShoeBoxLabel", idx: 7, type: "number" },
         { key: "unitsCartonLabel", name: "unitsCartonLabel", idx: 8, type: "number" },
         { key: "cartonsCartonLabel", name: "cartonsCartonLabel", idx: 9, type: "number" },
+        { key: "vasCtns", name: "vasCtns", idx: 10, type: "number" },
+        { key: "vasUnits", name: "vasUnits", idx: 11, type: "number" },
+        { key: "vasTime", name: "vasTime", idx: 12, type: "number" },
     ]
     addWS(workBook, 'by cust', columns2, statistics.byCustomer);
     workBook.write(`vas.xlsx`);

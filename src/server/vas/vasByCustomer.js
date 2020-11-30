@@ -6,7 +6,7 @@ const vasByDate = (data) => {
             || item.shoeBoxLabel === '1' || item.cartonLabel === '1');
     });
 
-    const vasCustomersSummary = groupBy(vasCustomers, ['scust', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'], ['packedUnit'], []);
+    const vasCustomersSummary = groupBy(vasCustomers, ['scust', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'], ['units', 'vasTime'], []);
 
     const customers = vasCustomersSummary.map((item) => item.scust);
     const uniqueCustomers = [...new Set(customers)];
@@ -21,28 +21,34 @@ const vasByDate = (data) => {
             unitsShoeBoxLabel: 0,
             cartonsShoeBoxLabel: 0,
             unitsCartonLabel: 0,
-            cartonsCartonLabel: 0
+            cartonsCartonLabel: 0,
+            vasCtns: 0, 
+            vasUnits : 0,
+            vasTime:0
         }
     })
 
     uniqueCustomersWithProperties.map((customer) => {
         vasCustomersSummary.map((cust) => {
             console.log(cust);
+            customer.vasCtns = cust.cnt;
+            customer.vasUnits = cust.units_sum;
+            customer.vasTime = cust.vasTime_sum;
             if (cust.scust === customer.cust) {
                 if (cust.inspection === '1') {
-                    customer.unitsInspection = cust.packedUnit_sum;
+                    customer.unitsInspection = cust.units_sum;
                     customer.cartonsInspection = cust.cnt;
                 }
                 if (cust.shoeTag === '1') {
-                    customer.unitsShoeTag = cust.packedUnit_sum;
+                    customer.unitsShoeTag = cust.units_sum;
                     customer.cartonsShoeTag = cust.cnt;
                 }
                 if (cust.shoeBoxLabel === '1') {
-                    customer.unitsShoeBoxLabel = cust.packedUnit_sum;
+                    customer.unitsShoeBoxLabel = cust.units_sum;
                     customer.cartonsShoeBoxLabel = cust.cnt;
                 }
                 if (cust.cartonLabel === '1') {
-                    customer.unitsCartonLabel = cust.packedUnit_sum;
+                    customer.unitsCartonLabel = cust.units_sum;
                     customer.cartonsCartonLabel = cust.cnt;
                 }
             }

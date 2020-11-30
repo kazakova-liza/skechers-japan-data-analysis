@@ -1,10 +1,10 @@
 import affinityPrep from './affinityPrep.js'
 import affinityGroup from './affinityGroup.js'
-import groupBy from '../utils/groupBy.js'
-import executeQuery from './sql/executeQuery.js'
+import groupBy from '../../utils/groupBy.js'
+import {executeQuery} from '../sql/executeQuery.js'
 import makeFriends from './makeFriends.js'
 import xl from 'excel4node'
-import addWS from '../utils/addWS.js'
+import addWS from '../../utils/addWS.js'
 
 const createAffinity = async () => {
     const query = `SELECT carton, packedUnit, sku, left(wave, 8) as wdate, left(customer, 9) as cust
@@ -135,7 +135,7 @@ const createAffinity = async () => {
     workBook.write(`affinity.xlsx`);
 
     bigCustomersNames.map((cust) => {
-        const ords = bigCustomerOrds.filter((order) => order.cust);
+        const ords = bigCustomerOrds.filter((order) => order.cust == cust);
         const affRes = groupBy(ords, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
         const affResFiltered = affRes.filter((res) => res.putGrp != 'null');
 
