@@ -22,19 +22,19 @@ const vasByDate = (data) => {
             cartonsShoeBoxLabel: 0,
             unitsCartonLabel: 0,
             cartonsCartonLabel: 0,
-            vasCtns: 0, 
-            vasUnits : 0,
-            vasTime:0
+            vasCtns: 0,
+            vasUnits: 0,
+            vasTime: 0
         }
     })
 
     uniqueCustomersWithProperties.map((customer) => {
         vasCustomersSummary.map((cust) => {
             console.log(cust);
-            customer.vasCtns = cust.cnt;
-            customer.vasUnits = cust.units_sum;
-            customer.vasTime = cust.vasTime_sum;
             if (cust.scust === customer.cust) {
+                customer.vasCtns += cust.cnt;
+                customer.vasUnits += cust.units_sum;
+                customer.vasTime += Math.round(cust.vasTime_sum / 3600);
                 if (cust.inspection === '1') {
                     customer.unitsInspection = cust.units_sum;
                     customer.cartonsInspection = cust.cnt;

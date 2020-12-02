@@ -10,8 +10,11 @@ sku:
 orders:
 	node src/server/orders.js
 
+ostat:
+	node src/server/ordersStats.js
+
 asn:
-	node src/server/asn.js
+	node src/server/inbound/receivingStats.js
 
 affinity:
 	node src/server/affinity.js
@@ -29,7 +32,7 @@ key:
 	node src/server/keyAccounts.js
 
 receiving:
-	node src/server/dailyReceving.js
+	node src/server/inbound/receivings.js
 
 returns:
 	node src/server/dailyReturns.js

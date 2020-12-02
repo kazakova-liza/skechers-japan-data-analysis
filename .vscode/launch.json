@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/server/vas/vasStat.js"
+            "program": "${workspaceFolder}/src/server/inbound/receivingStats.js"
         }
     ]
 }

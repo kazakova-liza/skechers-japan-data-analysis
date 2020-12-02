@@ -7,14 +7,13 @@ import addWS from '../../utils/addWS.js'
 
 
 const createVasStat = async () => {
-    const table = 'orders';
 
     const query = `SELECT carton, soldTo,
                     shipTo, wave, units, left(wave, 8) as wdate,
                     inspection, shoeTag, shoeBoxLabel, cartonLabel, left(customer, 9) as scust, cartonType, vasTime
                     FROM japan2.cartons`;
 
-    const data = await executeQuery('getSpecificData', table, query);
+    const data = await executeQuery('getSpecificData', undefined, query);
     console.log(data[0]);
 
     const byDate = vasByDate(data);
@@ -26,8 +25,6 @@ const createVasStat = async () => {
     const keyAccountsVas = vasByDate(keyAccounts);
     const fullCasesVas = vasByDate(fullCases);
     const activeVas = vasByDate(active);
-
-
 
     return {
         byDate,

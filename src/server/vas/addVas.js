@@ -1,9 +1,5 @@
-import { executeQuery, updateField } from "../sql/executeQuery.js";
 
-const addVasType = async () => {
-    const query = `SELECT soldTo, id
-                    from japan2.orders`;
-    const data = await executeQuery('getSpecificData', undefined, query);
+const addVasType = (data) => {
     const inspection = ['10036'];
     const shoeTag = ['10005', '10015', '10038', '10036', '10007', '10057'];
     const shoeBoxLabel = ['10005', '10015', '10047', '10004', '10036'];
@@ -31,13 +27,8 @@ const addVasType = async () => {
     console.log(data[0]);
 
 
-    // await updateField('orders', 'id', 'inspection', data);
-    // await updateField('orders', 'id', 'shoeTag', data);
-    // await updateField('orders', 'id', 'shoeBoxLabel', data);
-    await updateField('orders', 'id', 'cartonLabel', data);
+    return data;
 }
-
-addVasType();
 
 export default addVasType;
 

@@ -3,7 +3,7 @@ import groupBy from '../../utils/groupBy.js'
 const vasByDate = (data) => {
     const hasInspection = data.filter((item) => item.inspection === '1');
     let bys = ['wdate'];
-    let sums = ['units','vasTime'];
+    let sums = ['units', 'vasTime'];
     let dcnts = [];
     const grouppedByInspection = groupBy(hasInspection, bys, sums, dcnts);
 
@@ -45,7 +45,7 @@ const vasByDate = (data) => {
             wdate: item.wdate,
             unitsShoeBoxLabel: item.units_sum,
             cartonsShoeBoxLabel: item.cnt,
-            })
+        })
     });
 
     grouppedByCartonLabel.map((item) => {
@@ -60,8 +60,8 @@ const vasByDate = (data) => {
         allData.push({
             wdate: item.wdate,
             vasCtns: item.cnt,
-            vasUnits : item.units_sum,
-            vasTime: item.vasTime_sum/3600,
+            vasUnits: item.units_sum,
+            vasTime: Math.round(item.vasTime_sum / 3600),
         })
     });
 
@@ -79,9 +79,9 @@ const vasByDate = (data) => {
             cartonsShoeBoxLabel: 0,
             unitsCartonLabel: 0,
             cartonsCartonLabel: 0,
-            vasCtns: 0, 
-            vasUnits : 0,
-            vasTime:0
+            vasCtns: 0,
+            vasUnits: 0,
+            vasTime: 0
         }
     })
 
