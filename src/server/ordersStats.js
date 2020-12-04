@@ -28,7 +28,13 @@ const calculateOrdersStat = async () => {
     // const xtab2 = createCrossTab(inspectionDyVasUnits, xtabIn);
     // addWS(wb1, 'daysvasxtab', xtab2.colsArr, xtab2.res);
 
-    let dyAll = groupBy(data, ['wdate'], ['units'], ['soldTo', 'shipTo', 'carton', 'sku'])
+    let config = {
+        bys: ['wdate'],
+        sums: ['units'],
+        dcnts: ['soldTo', 'shipTo', 'carton', 'sku']
+    }
+
+    let dyAll = groupBy(data, config);
     const columns = [
         { key: "wdate", name: "Date", idx: 1, type: "string" },
         { key: "cnt", name: "lines", idx: 2, type: "number" },
@@ -107,22 +113,33 @@ const calculateOrdersStat = async () => {
 
 
     let actOrds = data.filter(ln => ln.cartonType == 'active')
-    let dyActAll = groupBy(actOrds, ['wdate'], ['units'], ['soldTo', 'shipTo', 'carton', 'sku'])
+    config = {
+        bys: ['wdate'],
+        sums: ['units'],
+        dcnts: ['soldTo', 'shipTo', 'carton', 'sku']
+    }
+    let dyActAll = groupBy(actOrds, config)
     addWS(wb1, 'daysActSum', columns, dyActAll);
 
     let fcOrds = data.filter(ln => ln.cartonType == 'FC')
-    let dyFcAll = groupBy(fcOrds, ['wdate'], ['units'], ['soldTo', 'shipTo', 'carton', 'sku'])
+    let dyFcAll = groupBy(fcOrds, config)
     addWS(wb1, 'daysFCSum', columns, dyFcAll);
 
     let popOrds = data.filter(ln => ln.cartonType == 'POP')
-    let dyPopAll = groupBy(popOrds, ['wdate'], ['units'], ['soldTo', 'shipTo', 'carton', 'sku'])
+    let dyPopAll = groupBy(popOrds, config)
     addWS(wb1, 'daysPOPSum', columns, dyPopAll);
 
     let keyOrds = data.filter(ln => ln.cartonType == 'key')
-    let dyKeyAll = groupBy(keyOrds, ['wdate'], ['units'], ['soldTo', 'shipTo', 'carton', 'sku'])
+    let dyKeyAll = groupBy(keyOrds, config)
     addWS(wb1, 'daysKEYSum', columns, dyKeyAll);
 
-    let custAll = groupBy(data, ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'], ['units'], ['carton', 'wdate', 'shipTo', 'sku'])
+    const config1 = {
+        bys: ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'],
+        sums: ['units'],
+        dcnts: ['carton', 'wdate', 'shipTo', 'sku']
+    }
+
+    let custAll = groupBy(data, config1)
     let columns4 = [
         { key: "scust", name: "Cust", idx: 1, type: "string" },
         { key: "cnt", name: "lines", idx: 2, type: "number" },
@@ -138,11 +155,16 @@ const calculateOrdersStat = async () => {
     ]
     addWS(wb1, 'custsum', columns4, custAll);
 
-    let custKeyAll = groupBy(keyOrds, ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'], ['units'], ['carton', 'wdate', 'shipTo', 'sku'])
+    let custKeyAll = groupBy(keyOrds, config1)
     addWS(wb1, 'custKeysum', columns4, custKeyAll);
 
     //  SINGLE DAY = 20200324
     let Ords20200324 = actOrds.filter(ln => ln.wdate == '20200324')
+    config = {
+        bys: ['sku'],
+        sums: ['units'],
+        dcnts: ['carton', 'shipTo']
+    }
     let sku20200324 = groupBy(Ords20200324, ['sku'], ['units'], ['carton', 'shipTo'])
     let columns5 = [
         { key: "sku", name: "SKU", idx: 1, type: "string" },
@@ -153,7 +175,7 @@ const calculateOrdersStat = async () => {
     ]
     addWS(wb1, 'sku20200324', columns5, sku20200324);
 
-    let cust20200324 = groupBy(Ords20200324, ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'], ['units'], ['carton', 'wdate', 'shipTo', 'sku'])
+    let cust20200324 = groupBy(Ords20200324, config1)
     addWS(wb1, 'cust20200324', columns4, cust20200324);
 
     wb1.write('ExcelFile3.xlsx')

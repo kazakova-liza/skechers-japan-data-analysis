@@ -76,12 +76,14 @@ const createAffinity = async () => {
     const bigCustomerOrds = ords2.filter((order) => bigCustomersNames.includes(order.cust));
 
     ords2.sort((a, b) => { return a.sku.localeCompare(b.sku) || a.putGrp - b.putGrp });
-    const affResAll = groupBy(ords2, ['putGrp'], ['packedUnit'], ['carton', 'sku'])
+    let config = {
+        bys: ['putGrp'],
+        sums: ['packedUnit'],
+        dcnts: ['carton', 'sku']
+    }
+    const affResAll = groupBy(ords2, config)
     const affResAllFiltered = affResAll.filter((res) => res.putGrp != 'null');
-    // console.log(affResAllFiltered);
 
-
-    // console.log(affResAll[0])
     // need to display average line, skus, cartons per group from affRes
 
     const workBook = new xl.Workbook();
@@ -116,7 +118,7 @@ const createAffinity = async () => {
     addWS(workBook, 'affAll_stats', columnsTotal, [statsAll]);
     workBook.write(`affinity.xlsx`);
 
-    const smallCustRes = groupBy(smallCustomersOrds, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
+    const smallCustRes = groupBy(smallCustomersOrds, config);
     const smallCustResFiltered = smallCustRes.filter((res) => res.putGrp != 'null');
 
     addWS(workBook, 'affSmall', columns, smallCustResFiltered);
@@ -136,7 +138,7 @@ const createAffinity = async () => {
 
     bigCustomersNames.map((cust) => {
         const ords = bigCustomerOrds.filter((order) => order.cust);
-        const affRes = groupBy(ords, ['putGrp'], ['packedUnit'], ['carton', 'sku']);
+        const affRes = groupBy(ords, config);
         const affResFiltered = affRes.filter((res) => res.putGrp != 'null');
 
         addWS(workBook, cust, columns, affResFiltered);

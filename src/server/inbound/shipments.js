@@ -16,17 +16,22 @@ const createShipmentsStatistics = async () => {
 
     const data = await executeQuery('getSpecificData', table, query);
     console.log(data[0]);
-    let bys = ['shipment'];
-    let sums = ['cases', 'units'];
-    let dcnts = ['sku', 'style',];
 
-    const grouppedByShipment = groupBy(data, bys, sums, dcnts);
+    let config = {
+        bys: ['shipment'],
+        sums: ['cases', 'units'],
+        dcnts: ['sku', 'style',]
+    }
 
-    bys = ['shipment', 'volBand'];
-    sums = ['cases', 'units', 'pallets', 'pallEquiv'];
-    dcnts = ['sku'];
+    const grouppedByShipment = groupBy(data, config);
 
-    const grouppedByShipmentVolBand = groupBy(data, bys, sums, dcnts);
+    config = {
+        bys: ['shipment', 'volBand'],
+        sums: ['cases', 'units', 'pallets', 'pallEquiv'],
+        dcnts: ['sku']
+    }
+
+    const grouppedByShipmentVolBand = groupBy(data, config);
 
     // console.log(grouppedByShipmentVolBand);
     const result = grouppedByShipment.map((item) => {

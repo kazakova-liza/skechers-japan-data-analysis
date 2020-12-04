@@ -10,11 +10,14 @@ const createReturnsStatistics = async () => {
 
     const data = await executeQuery('getSpecificData', table, query);
     console.log(data[0]);
-    const bys = ['verifiedDate'];
-    const sums = ['unitsVerified'];
-    const dcnts = ['sku'];
 
-    const grouppedData = groupBy(data, bys, sums, dcnts);
+    const config = {
+        bys: ['verifiedDate'],
+        sums: ['unitsVerified'],
+        dcnts: ['sku']
+    }
+
+    const grouppedData = groupBy(data, config);
     return grouppedData;
 }
 

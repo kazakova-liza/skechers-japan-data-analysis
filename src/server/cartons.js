@@ -12,11 +12,12 @@ const createCartonsTable = async () => {
 
     const dataWithVas = addVas(data);
 
-    let bys = ['carton', 'generatedDate', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'division', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'];
-    let sums = ['packedUnit'];
-    let dcnts = [];
+    const config = {
+        bys: ['carton', 'generatedDate', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'division', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'],
+        sums: ['packedUnit']
+    }
 
-    const grouppedData = groupBy(dataWithVas, bys, sums, dcnts);
+    const grouppedData = groupBy(dataWithVas, config);
 
     const keyAccounts = await findKeyAccounts(data);
 

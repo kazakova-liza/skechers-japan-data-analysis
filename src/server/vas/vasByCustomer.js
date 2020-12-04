@@ -6,7 +6,11 @@ const vasByDate = (data) => {
             || item.shoeBoxLabel === '1' || item.cartonLabel === '1');
     });
 
-    const vasCustomersSummary = groupBy(vasCustomers, ['scust', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'], ['units', 'vasTime'], []);
+    let config = {
+        bys: ['scust', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'],
+        sums: ['units', 'vasTime']
+    }
+    const vasCustomersSummary = groupBy(vasCustomers, config);
 
     const customers = vasCustomersSummary.map((item) => item.scust);
     const uniqueCustomers = [...new Set(customers)];

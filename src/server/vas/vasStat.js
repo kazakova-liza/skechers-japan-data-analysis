@@ -1,5 +1,4 @@
 import { executeQuery } from '../sql/executeQuery.js'
-import groupBy from '../../utils/groupBy.js'
 import vasByDate from './vasByDate.js';
 import vasByCustomer from './vasByCustomer.js'
 import xl from 'excel4node'

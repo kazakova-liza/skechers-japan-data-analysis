@@ -1,10 +1,10 @@
-import {executeQuery} from './sql/executeQuery.js'
+import { executeQuery } from './sql/executeQuery.js'
 import groupBy from '../utils/groupBy.js'
 import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 
 
-const findKeyAccounts = async(allOrds) => {
+const findKeyAccounts = async (allOrds) => {
 
     console.log(allOrds[0]);
 
@@ -32,9 +32,11 @@ const findKeyAccounts = async(allOrds) => {
         }
     }
 
-    // console.log(ctnArr[0]);
+    const config = {
+        bys: ['mx']
+    }
 
-    const ctnArrSum = groupBy(ctnArr, ['mx'], [], [])
+    const ctnArrSum = groupBy(ctnArr, config)
 
     var ctnArrSumBig = ctnArrSum.filter((a) => a.cnt > 50)
     // console.log(ctnArrSumBig[0]);

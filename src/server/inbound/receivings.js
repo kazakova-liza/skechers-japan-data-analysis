@@ -28,20 +28,23 @@ const createDailyReceivingStats = async () => {
         const data = await executeQuery('getSpecificData', table, query);
         console.log(data[0]);
 
-        let bys = ['verifiedDate'];
-        let sums = ['pallets', 'pallEquiv', 'cases', 'units'];
-        let dcnts = ['shipment', 'sku', 'style'];
+        let config = {
+            bys: ['verifiedDate'],
+            sums: ['pallets', 'pallEquiv', 'cases', 'units'],
+            dcnts: ['shipment', 'sku', 'style']
+        }
 
-        const grouppedByDate = groupBy(data, bys, sums, dcnts);
+        const grouppedByDate = groupBy(data, config);
         console.log(type);
 
         console.log(grouppedByDate[0]);
 
-        bys = ['verifiedDate', 'volBand'];
-        sums = ['pallets', 'cases'];
-        dcnts = [];
+        config = {
+            bys: ['verifiedDate', 'volBand'],
+            sums: ['pallets', 'cases']
+        }
 
-        const grouppedByDateVolBand = groupBy(data, bys, sums, dcnts);
+        const grouppedByDateVolBand = groupBy(data, config);
 
         const result = grouppedByDate.map((item) => {
             const volBands = grouppedByDateVolBand.filter((el) => el.verifiedDate === item.verifiedDate);

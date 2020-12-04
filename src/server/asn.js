@@ -9,11 +9,12 @@ const buildAsnStatistics = async () => {
                     where recRtn != 'Return'`;
     const data = await executeQuery('getSpecificData', table, query);
     console.log(data[0]);
-    const bys = ['shipment', 'sku', 'style', 'color', 'size', 'receiveDate', 'verifiedDate'];
-    const sums = ['casesVerified', 'unitsVerified'];
-    const dcnts = [];
+    const config = {
+        bys: ['shipment', 'sku', 'style', 'color', 'size', 'receiveDate', 'verifiedDate'],
+        sums: ['casesVerified', 'unitsVerified']
+    }
 
-    const grouppedData = groupBy(data, bys, sums, dcnts);
+    const grouppedData = groupBy(data, config);
 
     const processedData = grouppedData.map((item) => {
         const palletsQty = item.casesVerified_sum / 24;

@@ -2,6 +2,10 @@ import groupBy from '../../utils/groupBy.js'
 
 const vasByDate = (data) => {
     const hasInspection = data.filter((item) => item.inspection === '1');
+    let config = {
+        bys: ['wdate'],
+        sums: ['units', 'vasTime']
+    }
     let bys = ['wdate'];
     let sums = ['units', 'vasTime'];
     let dcnts = [];
