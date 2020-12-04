@@ -1,5 +1,5 @@
-const addWS = (wbook, nme, columns, data) => {
-    const ws = wbook.addWorksheet(nme);
+const addWS = (ws, columns, data) => {
+    // const ws = wbook.addWorksheet(nme);
     //Write Column Title in Excel file
     columns.forEach(col => {
         ws.cell(1, col.idx)
@@ -9,7 +9,7 @@ const addWS = (wbook, nme, columns, data) => {
     data.forEach(record => {
         console.log(record);
         columns.forEach(col => {
-            if (col.key in record){
+            if (col.key in record) {
                 if (col.type == "string") ws.cell(rowIndex, col.idx).string(record[col.key])
                 if (col.type == "number") ws.cell(rowIndex, col.idx).number(record[col.key])
                 if (col.type == "objToString") ws.cell(rowIndex, col.idx).string(record[col.key].toString())

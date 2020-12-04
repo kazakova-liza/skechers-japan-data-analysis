@@ -6,24 +6,21 @@ const vasByDate = (data) => {
         bys: ['wdate'],
         sums: ['units', 'vasTime']
     }
-    let bys = ['wdate'];
-    let sums = ['units', 'vasTime'];
-    let dcnts = [];
-    const grouppedByInspection = groupBy(hasInspection, bys, sums, dcnts);
+    const grouppedByInspection = groupBy(hasInspection, config);
 
     const hasShoeTag = data.filter((item) => item.shoeTag === '1');
-    const grouppedByShoeTag = groupBy(hasShoeTag, bys, sums, dcnts);
+    const grouppedByShoeTag = groupBy(hasShoeTag, config);
 
     console.log(grouppedByShoeTag[0]);
 
     const hasShoeBoxLabel = data.filter((item) => item.shoeBoxLabel === '1');
-    const grouppedByShoeBoxLabel = groupBy(hasShoeBoxLabel, bys, sums, dcnts);
+    const grouppedByShoeBoxLabel = groupBy(hasShoeBoxLabel, config);
 
     const hasCartonLabel = data.filter((item) => item.cartonLabel === '1');
-    const grouppedByCartonLabel = groupBy(hasCartonLabel, bys, sums, dcnts);
+    const grouppedByCartonLabel = groupBy(hasCartonLabel, config);
 
     const hasVas = data.filter((item) => item.vasTime > 0);
-    const grouppedByHasVas = groupBy(hasVas, bys, sums, dcnts);
+    const grouppedByHasVas = groupBy(hasVas, config);
 
 
     const allData = [];
