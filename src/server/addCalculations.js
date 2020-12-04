@@ -1,6 +1,6 @@
 import calculate from './calculate.js'
 
-const addCalculations = (data, columns, ws) => {
+const addCalculations = (ws, columns, data) => {
     const calculations = calculate(data);
     const dataLength = data.length;
 

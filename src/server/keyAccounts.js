@@ -1,7 +1,5 @@
-import { executeQuery } from './sql/executeQuery.js'
+
 import groupBy from '../utils/groupBy.js'
-import xl from 'excel4node'
-import addWS from '../utils/addWS.js'
 
 
 const findKeyAccounts = async (allOrds) => {
@@ -16,7 +14,6 @@ const findKeyAccounts = async (allOrds) => {
                 ctns[act.carton].push('_' + act.wdate)
             }
             ctns[act.carton].push(act.sku + '-' + act.packedUnit.toString())
-            // console.log(ctns);
         }
     })
 
@@ -60,13 +57,6 @@ const findKeyAccounts = async (allOrds) => {
             //keyCartons.push(carton);
         }
     })
-    //const wb1 = new xl.Workbook();
-    // const columns1 = [
-    //     { "key": "mx", "name": "mix", "idx": 1, "type": "string" },
-    //     { "key": "cnt", "name": "cartons", "idx": 2, "type": "number" },
-    // ]
-    // addWS(wb1, 'key cartons', columns1, ctnArrSumBig);
-    // wb1.write('ExcelFile2.xlsx')
     return keyCartonsArr;
 }
 

@@ -3,6 +3,8 @@ import vasByDate from './vasByDate.js';
 import vasByCustomer from './vasByCustomer.js'
 import xl from 'excel4node'
 import addWS from '../../utils/addWS.js'
+import createColumnsArray from '../createColumnsArray.js'
+import addCalculations from '../addCalculations.js'
 
 
 const createVasStat = async () => {
@@ -37,48 +39,35 @@ const createVasStat = async () => {
 const main = async () => {
     const statistics = await createVasStat();
     // console.log(statistics);
-    const workBook = new xl.Workbook();
-    const columns1 = [
-        { key: "date", name: "date", idx: 1, type: "string" },
-        { key: "unitsInspection", name: "unitsInspection", idx: 2, type: "number" },
-        { key: "cartonsInspection", name: "cartonsInspection", idx: 3, type: "number" },
-        { key: "unitsShoeTag", name: "unitsShoeTag", idx: 4, type: "number" },
-        { key: "cartonsShoeTag", name: "cartonsShoeTag", idx: 5, type: "number" },
-        { key: "unitsShoeBoxLabel", name: "unitsShoeBoxLabel", idx: 6, type: "number" },
-        { key: "cartonsShoeBoxLabel", name: "cartonsShoeBoxLabel", idx: 7, type: "number" },
-        { key: "unitsCartonLabel", name: "unitsCartonLabel", idx: 8, type: "number" },
-        { key: "cartonsCartonLabel", name: "cartonsCartonLabel", idx: 9, type: "number" },
-        { key: "vasCtns", name: "vasCtns", idx: 10, type: "number" },
-        { key: "vasUnits", name: "vasUnits", idx: 11, type: "number" },
-        { key: "vasTime", name: "vasTime", idx: 12, type: "number" },
-    ]
-    addWS(workBook, 'by date', columns1, statistics.byDate);
-    workBook.write(`vas.xlsx`);
+    const wb1 = new xl.Workbook();
 
-    const columns2 = [
-        { key: "cust", name: "cust", idx: 1, type: "string" },
-        { key: "unitsInspection", name: "unitsInspection", idx: 2, type: "number" },
-        { key: "cartonsInspection", name: "cartonsInspection", idx: 3, type: "number" },
-        { key: "unitsShoeTag", name: "unitsShoeTag", idx: 4, type: "number" },
-        { key: "cartonsShoeTag", name: "cartonsShoeTag", idx: 5, type: "number" },
-        { key: "unitsShoeBoxLabel", name: "unitsShoeBoxLabel", idx: 6, type: "number" },
-        { key: "cartonsShoeBoxLabel", name: "cartonsShoeBoxLabel", idx: 7, type: "number" },
-        { key: "unitsCartonLabel", name: "unitsCartonLabel", idx: 8, type: "number" },
-        { key: "cartonsCartonLabel", name: "cartonsCartonLabel", idx: 9, type: "number" },
-        { key: "vasCtns", name: "vasCtns", idx: 10, type: "number" },
-        { key: "vasUnits", name: "vasUnits", idx: 11, type: "number" },
-        { key: "vasTime", name: "vasTime", idx: 12, type: "number" },
-    ]
-    addWS(workBook, 'by cust', columns2, statistics.byCustomer);
-    workBook.write(`vas.xlsx`);
+    const byDateColumns = createColumnsArray(statistics.byDate[0]);
 
-    console.log(statistics.keyAccountsVas);
-    addWS(workBook, 'key accounts', columns1, statistics.keyAccountsVas);
-    workBook.write(`vas.xlsx`);
-    addWS(workBook, 'FC', columns1, statistics.fullCasesVas);
-    workBook.write(`vas.xlsx`);
-    addWS(workBook, 'active', columns1, statistics.activeVas);
-    workBook.write(`vas.xlsx`);
+    const ws = wb1.addWorksheet('by date');
+    addWS(ws, byDateColumns, statistics.byDate);
+    addCalculations(ws, byDateColumns, statistics.byDate);
+
+    const byCustColumns = createColumnsArray(statistics.byCustomer[0]);
+
+    const ws1 = wb1.addWorksheet('by cust');
+    addWS(ws1, byCustColumns, statistics.byCustomer);
+    addCalculations(ws1, byCustColumns, statistics.byCustomer);
+
+
+    const ws2 = wb1.addWorksheet('key accounts');
+    addWS(ws2, byDateColumns, statistics.keyAccountsVas);
+    addCalculations(ws2, byDateColumns, statistics.keyAccountsVas);
+
+    const ws3 = wb1.addWorksheet('FC');
+    addWS(ws3, byDateColumns, statistics.fullCasesVas);
+    addCalculations(ws3, byDateColumns, statistics.fullCasesVas);
+
+    const ws4 = wb1.addWorksheet('active');
+    addWS(ws4, byDateColumns, statistics.activeVas);
+    addCalculations(ws4, byDateColumns, statistics.activeVas);
+
+    wb1.write(`vas.xlsx`);
+    console.log('done');
 }
 
 main();

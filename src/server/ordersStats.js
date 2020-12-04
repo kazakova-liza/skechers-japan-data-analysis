@@ -3,6 +3,8 @@ import xl from 'excel4node'
 import addWS from '../utils/addWS.js'
 import createCrossTab from '../utils/createCrossTab.js'
 import groupBy from '../utils/groupBy.js'
+import createColumnsArray from './createColumnsArray.js'
+import addCalculations from './addCalculations.js'
 
 const calculateOrdersStat = async () => {
     const wb1 = new xl.Workbook();
@@ -28,23 +30,18 @@ const calculateOrdersStat = async () => {
     // const xtab2 = createCrossTab(inspectionDyVasUnits, xtabIn);
     // addWS(wb1, 'daysvasxtab', xtab2.colsArr, xtab2.res);
 
-    let config = {
+    const config = {
         bys: ['wdate'],
         sums: ['units'],
         dcnts: ['soldTo', 'shipTo', 'carton', 'sku']
     }
+    const dyAll = groupBy(data, config);
+    const columns = createColumnsArray(dyAll[0]);
 
-    let dyAll = groupBy(data, config);
-    const columns = [
-        { key: "wdate", name: "Date", idx: 1, type: "string" },
-        { key: "cnt", name: "lines", idx: 2, type: "number" },
-        { key: "units_sum", name: "units", idx: 3, type: "number" },
-        { key: "soldTo_dcnt", name: "SoldTos", idx: 4, type: "number" },
-        { key: "shipTo_dcnt", name: "ShipTos", idx: 5, type: "number" },
-        { key: "carton_dcnt", name: "Cartons", idx: 6, type: "number" },
-        { key: "sku_dcnt", name: "SKUs", idx: 7, type: "number" },
-    ]
-    addWS(wb1, 'dayssum', columns, dyAll);
+    const ws = wb1.addWorksheet('dayssum');
+    addWS(ws, columns, dyAll);
+    addCalculations(ws, columns, dyAll);
+
 
     const query1 = `SELECT cartonType, DATEDIFF(STR_TO_DATE(leaveDate, '%Y%m%d'), STR_TO_DATE(generatedDate, '%Y%m%d')) as leadTime, COUNT(distinct carton) as count
                     FROM orders
@@ -63,14 +60,10 @@ const calculateOrdersStat = async () => {
         }
     });
 
-
-    const columns1 = [
-        { key: "cartonType", name: "cartonType", idx: 1, type: "string" },
-        { key: "leadTime", name: "leadTime", idx: 2, type: "string" },
-        { key: "count", name: "count", idx: 3, type: "number" },
-    ];
-
-    addWS(wb1, 'leadTimeAll', columns1, data1);
+    const columns1 = createColumnsArray(data1[0]);
+    const ws1 = wb1.addWorksheet('leadTimeAll');
+    addWS(ws1, columns1, data1);
+    addCalculations(ws1, columns1, data1);
 
     const query2 = `SELECT STR_TO_DATE(leaveDate, '%Y%m%d') as leaveDate, STR_TO_DATE(generatedDate, '%Y%m%d') as generatedDate, COUNT(distinct carton) as count
                     FROM orders
@@ -84,15 +77,11 @@ const calculateOrdersStat = async () => {
             item.generatedDate = '0000-00-00T00:00:00.000Z';
         }
     })
-    const columns2 = [
-        { key: "leaveDate", name: "leaveDate", idx: 1, type: "objToString" },
-        { key: "generatedDate", name: "generatedDate", idx: 2, type: "objToString" },
-        { key: "count", name: "count", idx: 3, type: "number" },
-    ];
 
-    addWS(wb1, 'leadTimeKey', columns2, data2);
-
-    console.log(data2[0]);
+    const columns2 = createColumnsArray(data2[0]);
+    const ws2 = wb1.addWorksheet('leadTimeKey');
+    addWS(ws2, columns2, data2);
+    addCalculations(ws2, columns2, data2);
 
     const query3 = `SELECT LEFT(wave, 8) AS wave, vasTime > 0 AS hasVas, cartontype, COUNT(*) as count
                     FROM cartons
@@ -100,85 +89,83 @@ const calculateOrdersStat = async () => {
 
     const data3 = await executeQuery('getSpecificData', undefined, query3);
 
-    const columns3 = [
-        { key: "wave", name: "wave", idx: 1, type: "string" },
-        { key: "hasVas", name: "hasVas", idx: 2, type: "number" },
-        { key: "count", name: "count", idx: 3, type: "number" },
-    ];
-
-    addWS(wb1, 'pickingFlows', columns3, data3);
-
-    console.log(data3[0]);
-
-
+    const columns3 = createColumnsArray(data3[0]);
+    const ws3 = wb1.addWorksheet('pickingFlows');
+    addWS(ws3, columns3, data3);
+    addCalculations(ws3, columns3, data3);
 
     let actOrds = data.filter(ln => ln.cartonType == 'active')
-    config = {
+    const config1 = {
         bys: ['wdate'],
         sums: ['units'],
         dcnts: ['soldTo', 'shipTo', 'carton', 'sku']
     }
-    let dyActAll = groupBy(actOrds, config)
-    addWS(wb1, 'daysActSum', columns, dyActAll);
+    let dyActAll = groupBy(actOrds, config1)
+    const columns4 = createColumnsArray(dyActAll[0]);
+    const ws4 = wb1.addWorksheet('daysActSum');
+    addWS(ws4, columns4, dyActAll);
+    addCalculations(ws4, columns4, dyActAll);
 
     let fcOrds = data.filter(ln => ln.cartonType == 'FC')
-    let dyFcAll = groupBy(fcOrds, config)
-    addWS(wb1, 'daysFCSum', columns, dyFcAll);
+    let dyFcAll = groupBy(fcOrds, config1)
+    const columns5 = createColumnsArray(dyActAll[0]);
+    const ws5 = wb1.addWorksheet('dyFcAll');
+    addWS(ws5, columns5, dyFcAll);
+    addCalculations(ws5, columns5, dyFcAll);
+
 
     let popOrds = data.filter(ln => ln.cartonType == 'POP')
-    let dyPopAll = groupBy(popOrds, config)
-    addWS(wb1, 'daysPOPSum', columns, dyPopAll);
+    let dyPopAll = groupBy(popOrds, config1);
+    const columns6 = createColumnsArray(dyPopAll[0]);
+    const ws6 = wb1.addWorksheet('daysPOPSum');
+    addWS(ws6, columns6, dyPopAll);
+    addCalculations(ws6, columns6, dyPopAll);
 
     let keyOrds = data.filter(ln => ln.cartonType == 'key')
-    let dyKeyAll = groupBy(keyOrds, config)
-    addWS(wb1, 'daysKEYSum', columns, dyKeyAll);
+    let dyKeyAll = groupBy(keyOrds, config1)
+    const columns7 = createColumnsArray(dyKeyAll[0]);
+    const ws7 = wb1.addWorksheet('daysKEYSum');
+    addWS(ws7, columns7, dyKeyAll);
+    addCalculations(ws7, columns7, dyKeyAll);
 
-    const config1 = {
+    const config2 = {
         bys: ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'],
         sums: ['units'],
         dcnts: ['carton', 'wdate', 'shipTo', 'sku']
     }
 
-    let custAll = groupBy(data, config1)
-    let columns4 = [
-        { key: "scust", name: "Cust", idx: 1, type: "string" },
-        { key: "cnt", name: "lines", idx: 2, type: "number" },
-        { key: "units_sum", name: "units", idx: 3, type: "number" },
-        { key: "carton_dcnt", name: "cartons", idx: 4, type: "number" },
-        { key: "wdate_dcnt", name: "dates", idx: 5, type: "number" },
-        { key: "shipTo_dcnt", name: "ShipTos", idx: 6, type: "number" },
-        { key: "sku_dcnt", name: "SKUs", idx: 7, type: "number" },
-        { key: "inspection", name: "inspection", idx: 8, type: "string" },
-        { key: "shoeTag", name: "shoeTag", idx: 9, type: "string" },
-        { key: "shoeBoxTag", name: "shoeBoxTag", idx: 10, type: "string" },
-        { key: "cartonTag", name: "cartonTag", idx: 11, type: "string" },
-    ]
-    addWS(wb1, 'custsum', columns4, custAll);
+    let custAll = groupBy(data, config2)
+    const columns8 = createColumnsArray(custAll[0]);
+    const ws8 = wb1.addWorksheet('custsum');
+    addWS(ws8, columns8, custAll);
+    addCalculations(ws8, columns8, custAll);
 
-    let custKeyAll = groupBy(keyOrds, config1)
-    addWS(wb1, 'custKeysum', columns4, custKeyAll);
+    let custKeyAll = groupBy(keyOrds, config2);
+    const columns9 = createColumnsArray(custKeyAll[0]);
+    const ws9 = wb1.addWorksheet('custKeysum');
+    addWS(ws9, columns9, custKeyAll);
+    addCalculations(ws9, columns9, custKeyAll);
 
     //  SINGLE DAY = 20200324
     let Ords20200324 = actOrds.filter(ln => ln.wdate == '20200324')
-    config = {
+    const config3 = {
         bys: ['sku'],
         sums: ['units'],
         dcnts: ['carton', 'shipTo']
     }
-    let sku20200324 = groupBy(Ords20200324, ['sku'], ['units'], ['carton', 'shipTo'])
-    let columns5 = [
-        { key: "sku", name: "SKU", idx: 1, type: "string" },
-        { key: "cnt", name: "lines", idx: 2, type: "number" },
-        { key: "units_sum", name: "units", idx: 3, type: "number" },
-        { key: "carton_dcnt", name: "cartons", idx: 4, type: "number" },
-        { key: "shipTo_dcnt", name: "ShipTos", idx: 5, type: "number" },
-    ]
-    addWS(wb1, 'sku20200324', columns5, sku20200324);
+    let sku20200324 = groupBy(Ords20200324, config3);
+    const columns10 = createColumnsArray(sku20200324[0]);
+    const ws10 = wb1.addWorksheet('sku20200324');
+    addWS(ws10, columns10, sku20200324);
+    addCalculations(ws10, columns10, sku20200324);
 
-    let cust20200324 = groupBy(Ords20200324, config1)
-    addWS(wb1, 'cust20200324', columns4, cust20200324);
+    let cust20200324 = groupBy(Ords20200324, config3);
+    const columns11 = createColumnsArray(cust20200324[0]);
+    const ws11 = wb1.addWorksheet('cust20200324');
+    addWS(ws11, columns11, cust20200324);
+    addCalculations(ws11, columns11, cust20200324);
 
-    wb1.write('ExcelFile3.xlsx')
+    wb1.write('ordersStats.xlsx')
     console.log("writen sheet")
 }
 
