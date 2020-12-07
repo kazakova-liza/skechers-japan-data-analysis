@@ -13,8 +13,11 @@ orders:
 ostat:
 	node src/server/ordersStats.js
 
-asn:
-	node src/server/inbound/receivingStats.js
+ostat:
+	node src/server/ordersStats.js
+
+type:
+	node src/server/cartonTypes.js
 
 affinity:
 	node src/server/affinity.js

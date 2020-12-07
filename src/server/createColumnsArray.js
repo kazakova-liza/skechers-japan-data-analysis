@@ -13,7 +13,7 @@ const createColumnsArray = (data) => {
             typeForWs = 'string';
         }
         if (type === 'boolean') {
-            typeForWs = 'string';
+            typeForWs = 'boolean';
         }
         return {
             key,

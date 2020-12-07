@@ -14,6 +14,7 @@ const addWS = (ws, columns, data) => {
                 if (col.type == "number") ws.cell(rowIndex, col.idx).number(record[col.key])
                 if (col.type == "objToString") ws.cell(rowIndex, col.idx).string(record[col.key].toString())
                 if (col.type == "date") ws.cell(rowIndex, col.idx).date(record[col.key]).style({ numberFormat: 'yyyy-mm-dd' })
+                if (col.type == "boolean") ws.cell(rowIndex, col.idx).bool(record[col.key])
             }
         });
         rowIndex++;
