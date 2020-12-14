@@ -13,9 +13,6 @@ orders:
 ostat:
 	node src/server/ordersStats.js
 
-ostat:
-	node src/server/ordersStats.js
-
 type:
 	node src/server/cartonTypes.js
 
@@ -31,11 +28,14 @@ cust:
 cartons:
 	node src/server/cartons.js
 
+vas:
+	node src/server/vas/vasStat.js
+
 key:
 	node src/server/keyAccounts.js
 
 receiving:
-	node src/server/inbound/receivings.js
+	node src/server/inbound/receivingStats.js
 
 returns:
 	node src/server/dailyReturns.js

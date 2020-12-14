@@ -1,5 +1,5 @@
 
-import groupBy from '../utils/groupBy.js'
+import groupBy from '../../utils/groupBy.js'
 
 
 const findKeyAccounts = async (allOrds) => {

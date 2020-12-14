@@ -10,10 +10,10 @@ const addCalculations = (ws, columns, data) => {
     ws.cell(dataLength + 5, 1).string('total');
 
     calculations.map((calc) => {
-        console.log(calc);
+        // console.log(calc);
         const keys = Object.keys(calc);
         let columnName;
-        console.log(keys[0].split('_'));
+        // console.log(keys[0].split('_'));
         if (keys[0].split('_').length === 2) {
             columnName = keys[0].split('_')[0];
         }

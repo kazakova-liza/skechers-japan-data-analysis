@@ -52,7 +52,7 @@ const calculateReceivingStats = async () => {
     addWS(ws5, shipmentsColumns, shipments);
     addCalculations(ws5, shipmentsColumns, shipments);
 
-    wb1.write(`receiving.xlsx`);
+    wb1.write(`japan_receiving.xlsx`);
     console.log('statistics has been written to a spreadsheet');
 }
 

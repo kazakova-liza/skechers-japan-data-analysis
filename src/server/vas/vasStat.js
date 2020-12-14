@@ -3,8 +3,8 @@ import vasByDate from './vasByDate.js';
 import vasByCustomer from './vasByCustomer.js'
 import xl from 'excel4node'
 import addWS from '../../utils/addWS.js'
-import createColumnsArray from '../createColumnsArray.js'
-import addCalculations from '../addCalculations.js'
+import createColumnsArray from '../../utils/createColumnsArray.js'
+import addCalculations from '../../utils/addCalculations.js'
 
 
 const createVasStat = async () => {
@@ -66,7 +66,7 @@ const main = async () => {
     addWS(ws4, byDateColumns, statistics.activeVas);
     addCalculations(ws4, byDateColumns, statistics.activeVas);
 
-    wb1.write(`vas.xlsx`);
+    wb1.write(`japan_vas.xlsx`);
     console.log('done');
 }
 

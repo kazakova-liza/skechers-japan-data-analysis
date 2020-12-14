@@ -1,10 +1,11 @@
-import { executeQuery } from './sql/executeQuery.js'
+import { executeQuery } from '../sql/executeQuery.js'
 import xl from 'excel4node'
-import addWS from '../utils/addWS.js'
-import createCrossTab from '../utils/createCrossTab.js'
-import groupBy from '../utils/groupBy.js'
-import createColumnsArray from './createColumnsArray.js'
-import addCalculations from './addCalculations.js'
+import addWS from '../../utils/addWS.js'
+import createCrossTab from '../../utils/createCrossTab.js'
+import groupBy from '../../utils/groupBy.js'
+import createColumnsArray from '../../utils/createColumnsArray.js'
+import addCalculations from '../../utils/addCalculations.js'
+import createCartonTypesStats from './cartonTypes.js'
 
 const calculateOrdersStat = async () => {
     const wb1 = new xl.Workbook();
@@ -49,7 +50,7 @@ const calculateOrdersStat = async () => {
 
     const data1 = await executeQuery('getSpecificData', undefined, query1);
 
-    console.log(data1[0]);
+    // console.log(data1[0]);
 
     data1.map((item) => {
         if (item.leadTime === null) {
@@ -76,9 +77,18 @@ const calculateOrdersStat = async () => {
         if (item.generatedDate === null) {
             item.generatedDate = '0000-00-00T00:00:00.000Z';
         }
+        if (typeof item.generatedDate === 'object') {
+            item.generatedDate = item.generatedDate.toDateString();
+        }
+        if (typeof item.leaveDate === 'object') {
+            item.leaveDate = item.leaveDate.toDateString();
+        }
+
     })
 
+
     const columns2 = createColumnsArray(data2[0]);
+
     const ws2 = wb1.addWorksheet('leadTimeKey');
     addWS(ws2, columns2, data2);
     addCalculations(ws2, columns2, data2);
@@ -129,7 +139,7 @@ const calculateOrdersStat = async () => {
     addCalculations(ws7, columns7, dyKeyAll);
 
     const config2 = {
-        bys: ['scust', 'inspection', 'shoeTag', 'shoeBoxTag', 'cartonTag'],
+        bys: ['scust'],
         sums: ['units'],
         dcnts: ['carton', 'wdate', 'shipTo', 'sku']
     }
@@ -165,7 +175,27 @@ const calculateOrdersStat = async () => {
     addWS(ws11, columns11, cust20200324);
     addCalculations(ws11, columns11, cust20200324);
 
-    wb1.write('ordersStats.xlsx')
+    const cartonTypes = await createCartonTypesStats();
+    // console.log(cartonTypes);
+
+    const ws12 = wb1.addWorksheet('waveByCartonType');
+    const columns12 = createColumnsArray(cartonTypes.waveByCartonType[0]);
+
+    // console.log(columns12);
+
+    // return;
+    addWS(ws12, columns12, cartonTypes.waveByCartonType);
+    addCalculations(ws12, columns12, cartonTypes.waveByCartonType);
+
+    const ws13 = wb1.addWorksheet('cartonTypes');
+
+    console.log(cartonTypes.xtab.colsArr);
+    console.log(cartonTypes.xtab.res);
+    addWS(ws13, cartonTypes.xtab.colsArr, cartonTypes.xtab.res);
+    addCalculations(ws13, cartonTypes.xtab.colsArr, cartonTypes.xtab.res);
+
+
+    wb1.write('japan_orders.xlsx')
     console.log("writen sheet")
 }
 

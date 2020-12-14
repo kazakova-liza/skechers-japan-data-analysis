@@ -1,7 +1,7 @@
-import { executeQuery } from './sql/executeQuery.js'
-import groupBy from '../utils/groupBy.js'
+import { executeQuery } from '../sql/executeQuery.js'
+import groupBy from '../../utils/groupBy.js'
 import findKeyAccounts from './keyAccounts.js'
-import addVas from './vas/addVas.js'
+import addVas from '../vas/addVas.js'
 
 
 const createCartonsTable = async () => {

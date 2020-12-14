@@ -1,4 +1,4 @@
-import { executeQuery } from './sql/executeQuery.js'
+import { executeQuery } from '../sql/executeQuery.js'
 
 
 const createOrdersTable = async () => {

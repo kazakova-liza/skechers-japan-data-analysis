@@ -15,6 +15,9 @@ const createColumnsArray = (data) => {
         if (type === 'boolean') {
             typeForWs = 'boolean';
         }
+        if (type === 'object') {
+            typeForWs = 'objToString';
+        }
         return {
             key,
             name: key,

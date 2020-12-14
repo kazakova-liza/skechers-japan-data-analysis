@@ -1,8 +1,8 @@
-import executeQuery from './sql/executeQuery.js'
-import groupBy from '../utils/groupBy.js'
+import executeQuery from '../sql/executeQuery.js'
+import groupBy from '../../utils/groupBy.js'
 
 
-const buildAsnStatistics = async () => {
+const createSmallAsn = async () => {
     const table = 'asn';
     const query = `SELECT *
                     from japan2.${table}
@@ -52,4 +52,4 @@ const buildAsnStatistics = async () => {
     await executeQuery('write', newTable, undefined, result, fields);
 }
 
-buildAsnStatistics();
+createSmallAsn();
