@@ -5,7 +5,7 @@ import addVas from '../vas/addVas.js'
 
 
 const createCartonsTable = async () => {
-    const query = `SELECT carton, generatedDate, leaveDate, customer, printCode, soldTo, shipTo, wave, division, packedUnit, sku, left(wave, 8) as wdate
+    const query = `SELECT carton, generatedDate, leaveDate, customer, printCode, soldTo, shipTo, pickTicket, wave, division, packedUnit, sku, left(wave, 8) as wdate
                     FROM japan2.orders`;
 
     const data = await executeQuery('getSpecificData', undefined, query);
@@ -13,7 +13,7 @@ const createCartonsTable = async () => {
     const dataWithVas = addVas(data);
 
     const config = {
-        bys: ['carton', 'generatedDate', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'wave', 'division', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'],
+        bys: ['carton', 'generatedDate', 'leaveDate', 'customer', 'printCode', 'soldTo', 'shipTo', 'pickTicket', 'wave', 'division', 'inspection', 'shoeTag', 'shoeBoxLabel', 'cartonLabel'],
         sums: ['packedUnit']
     }
 
@@ -52,10 +52,10 @@ const createCartonsTable = async () => {
     })
 
     const result = grouppedData.map((data) => {
-        return [data.carton, data.generatedDate, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.wave, data.cnt, data.packedUnit_sum, data.cartonType, data.bom, data.inspection, data.shoeTag, data.shoeBoxLabel, data.cartonLabel, data.vasTime];
+        return [data.carton, data.generatedDate, data.leaveDate, data.customer, data.soldTo, data.printCode, data.shipTo, data.pickTicket, data.wave, data.cnt, data.packedUnit_sum, data.cartonType, data.bom, data.inspection, data.shoeTag, data.shoeBoxLabel, data.cartonLabel, data.vasTime];
     })
 
-    const fields = 'carton, generatedDate, leaveDate, customer, soldTo, printCode, shipTo, wave, lines2, units, cartonType, bom, inspection,  shoeTag, shoeBoxLabel, cartonLabel, vasTime';
+    const fields = 'carton, generatedDate, leaveDate, customer, soldTo, printCode, shipTo, pickTicket, wave, lines2, units, cartonType, bom, inspection,  shoeTag, shoeBoxLabel, cartonLabel, vasTime';
     const newTable = 'cartons';
     const query2 = `CREATE TABLE japan2.cartons (
   carton VARCHAR(45) NULL,
@@ -65,6 +65,7 @@ const createCartonsTable = async () => {
   soldTo VARCHAR(45) NULL,
   printCode VARCHAR(45) NULL,
   shipTo  VARCHAR(45) NULL,
+  pickTicket VARCHAR(45) NULL,
   wave  VARCHAR(45) NULL,
   lines2 INT NULL,
   units INT NULL,
